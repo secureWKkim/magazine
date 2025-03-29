@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<url>
+<loc>http://localhost:4000/magazine/404/</loc>
+</url>
+<url>
+<loc>http://localhost:4000/magazine/about.html</loc>
+</url>
+<url>
+<loc>http://localhost:4000/magazine/author-jane.html</loc>
+</url>
+<url>
+<loc>http://localhost:4000/magazine/author-sal.html</loc>
+</url>
+<url>
+<loc>http://localhost:4000/magazine/authors-list.html</loc>
+</url>
+<url>
+<loc>http://localhost:4000/magazine/buy-me-a-coffee.html</loc>
+</url>
+<url>
+<loc>http://localhost:4000/magazine/categories.html</loc>
+</url>
+<url>
+<loc>http://localhost:4000/magazine/contact.html</loc>
+</url>
+<url>
+<loc>http://localhost:4000/magazine/</loc>
+</url>
+<url>
+<loc>http://localhost:4000/magazine/privacy-policy.html</loc>
+</url>
+<url>
+<loc>http://localhost:4000/magazine/tags.html</loc>
+</url>
+</urlset>
