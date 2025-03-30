@@ -1,11 +1,11 @@
 # Site
-name: 'Mundana'
+name: 'Eyes can blaze like Meteors!🌠'
 description: 'Mundana is a free Jekyll theme for awesome people like you, Medium like.'
 logo: 'assets/images/logo.png'
 favicon: 'assets/images/favicon.ico'
-baseurl: '/mundana-theme-jekyll'
+baseurl: '/magazine'
 disqus: 'demowebsite'
-email: 'wowthemesnet@gmail.com'
+email: '1rladnjsrud1@naver.com'
 mailchimp-list: 'https://wowthemes.us11.list-manage.com/subscribe/post?u=8aeb20a530e124561927d3bd8&amp;id=8c3d2d214b'
 
 include: ["_pages"]
@@ -19,6 +19,14 @@ plugins:
   - jekyll-seo-tag
   
 authors:
+    jane:
+      name:           Dr.Meteor
+      site:           https://github.com/secureWKkim
+      avatar:         /assets/images/avatar2.jpg
+      bio:            "Wayfarer who intersects interests: from Humanities to Entertainment"
+      email:          1rladnjsrud1@naver.com
+      twitter:        https://twitter.com/wowthemesnet
+
     sal:
       name:           Sal
       site:           https://www.wowthemes.net
@@ -27,13 +35,6 @@ authors:
       email:          wowthemesnet@gmail.com
       twitter:        https://twitter.com/wowthemesnet
 
-    jane:
-      name:           Jane
-      site:           https://www.wowthemes.net
-      avatar:         /assets/images/avatar2.jpg
-      bio:            "Blogger, fashionista, love to explore new ideas and write on my morning coffee!"
-      email:          fakemail@gmail.com
-      twitter:        https://twitter.com/wowthemesnet
  
 # Defaults
 defaults:
@@ -43,8 +44,8 @@ defaults:
       path: "_posts"
     values:
       layout: post
-      author: sal
-      avatar: /assets/images/avatar1.jpg
+      author: Dr.Meteor
+      avatar: /assets/images/avatar2.jpg
       
   # all pages
   - scope:
