@@ -4,23 +4,27 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Sal | Eyes can blaze like Meteors!🌠</title>
+    <title>Markdown Example | Eyes can blaze like Meteors!🌠</title>
 
     <!-- Begin Jekyll SEO tag v2.8.0 -->
-<title>Sal | Eyes can blaze like Meteors!🌠</title>
+<title>Markdown Example | Eyes can blaze like Meteors!🌠</title>
 <meta name="generator" content="Jekyll v4.4.1" />
-<meta property="og:title" content="Sal" />
+<meta property="og:title" content="Markdown Example" />
+<meta name="author" content="jane" />
 <meta property="og:locale" content="en_US" />
-<meta name="description" content="Mundana is a free Jekyll theme for awesome people like you, Medium like." />
-<meta property="og:description" content="Mundana is a free Jekyll theme for awesome people like you, Medium like." />
-<link rel="canonical" href="http://localhost:4000/magazine/author-sal.html" />
-<meta property="og:url" content="http://localhost:4000/magazine/author-sal.html" />
+<meta name="description" content="You’ll find this post in your _posts directory. Go ahead and edit it and re-build the site to see your changes. You can rebuild the site in many different ways, but the most common way is to run jekyll serve, which launches a web server and auto-regenerates your site when a file is updated. Something." />
+<meta property="og:description" content="You’ll find this post in your _posts directory. Go ahead and edit it and re-build the site to see your changes. You can rebuild the site in many different ways, but the most common way is to run jekyll serve, which launches a web server and auto-regenerates your site when a file is updated. Something." />
+<link rel="canonical" href="http://localhost:4000/magazine/markup-example/" />
+<meta property="og:url" content="http://localhost:4000/magazine/markup-example/" />
 <meta property="og:site_name" content="Eyes can blaze like Meteors!🌠" />
-<meta property="og:type" content="website" />
-<meta name="twitter:card" content="summary" />
-<meta property="twitter:title" content="Sal" />
+<meta property="og:image" content="http://localhost:4000/magazine/assets/images/6.jpg" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2019-01-19T00:00:00+09:00" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta property="twitter:image" content="http://localhost:4000/magazine/assets/images/6.jpg" />
+<meta property="twitter:title" content="Markdown Example" />
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"WebPage","description":"Mundana is a free Jekyll theme for awesome people like you, Medium like.","headline":"Sal","publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"http://localhost:4000/magazine/assets/images/logo.png"}},"url":"http://localhost:4000/magazine/author-sal.html"}</script>
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"jane"},"dateModified":"2019-01-19T00:00:00+09:00","datePublished":"2019-01-19T00:00:00+09:00","description":"You’ll find this post in your _posts directory. Go ahead and edit it and re-build the site to see your changes. You can rebuild the site in many different ways, but the most common way is to run jekyll serve, which launches a web server and auto-regenerates your site when a file is updated. Something.","headline":"Markdown Example","image":"http://localhost:4000/magazine/assets/images/6.jpg","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/magazine/markup-example/"},"publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"http://localhost:4000/magazine/assets/images/logo.png"},"name":"jane"},"url":"http://localhost:4000/magazine/markup-example/"}</script>
 <!-- End Jekyll SEO tag -->
 
 
@@ -108,12 +112,12 @@ var documents = [{
     "id": 2,
     "url": "http://localhost:4000/magazine/author-jane.html",
     "title": "Jane",
-    "body": "                        Jane Follow:         https://github. com/secureWKkim         Wayfarer who intersects interests: from Humanities to Entertainment                                   Posts by Jane:                   		Powerful things you can do with the Markdown editor	: 		  There are lots of powerful things you can do with the Markdown editor. If you’ve gotten pretty comfortable with writing in Markdown, then you may enjoy some more advanced tips about t. . . 	 			In 				Jekyll, 				tutorial, 								Feb 03, 2019						            		We all wait for summer	: 		  This is changed. As I engage in the so-called “bull sessions” around and about the school, I too often find that most college men have a misconception of the purpose of education. Mos. . . 	 			In 				Jekyll, 				tutorial, 								Jan 28, 2019						            		Options for creating a new site with Jekyll	: 		  jekyll new &lt;PATH&gt; installs a new Jekyll site at the path specified (relative to current directory). In this case, Jekyll will be installed in a directory called myblog. Here are. . . 	 			In 				Jekyll, 				tutorial, 								Jan 23, 2019						            		Markdown Example	: 		  You’ll find this post in your _posts directory. Go ahead and edit it and re-build the site to see your changes. You can rebuild the site in many different ways, but the most common wa. . . 	 			In 				Jekyll, 				tutorial, 								Jan 19, 2019						            		What is Jekyll	: 		  No more databases, comment moderation, or pesky updates to install-just your content. Markdown, Liquid, HTML &amp; CSS go in. Static sites come out ready for deployment. Permalinks, c. . . 	 			In 				Jekyll, 				tutorial, 								Jan 18, 2019						            		Could we reinvent the charm of old cities	: 		  Bucharest’s history alternated periods of development and decline from the early settlements in antiquity until its consolidation as the national capital of Romania late in the 19th c. . . 	 			In 				Jekyll, 				tutorial, 								Jan 18, 2019						        "
+    "body": "                        {{page. title}} Follow:         {{ site. authors. jane. site }}         {{ site. authors. jane. bio }}                                   Posts by {{page. title}}:       {% assign posts = site. posts | where: author , jane  %}      {% for post in posts %}      {% include main-loop-card. html %}      {% endfor %}  "
     }, {
     "id": 3,
     "url": "http://localhost:4000/magazine/author-sal.html",
     "title": "Sal",
-    "body": "                        Sal Follow:         https://www. wowthemes. net         Hi, I am Sal, the author of Mundana, the theme you're currently previewing. I hope you like it!                                   Posts by Sal:                   		The first mass-produced book to deviate from a rectilinear format	: 		  The first mass-produced book to deviate from a rectilinear format, at least in the United States, is thought to be this 1863 edition of Red Riding Hood, cut into the shape of the prot. . . 	 			In 				tutorial, 								Feb 02, 2019						            		Accumulated experience of social living	: 		  The die cut has also been employed in the non-juvenile sphere as well, a recent example being Jonathan Safran Foer’s ambitious Tree of Codes. 	 			In 				Jekyll, 				tutorial, 								Jan 30, 2019						            		About Bundler	: 		  gem install bundler installs the bundler gem through RubyGems. You only need to install it once - not every time you create a new Jekyll project. Here are some additional details:	 			In 				Jekyll, 								Jan 29, 2019						            		Tree of Codes	: 		  The first mass-produced book to deviate from a rectilinear format, at least in the United States, is thought to be this 1863 edition of Red Riding Hood, cut into the shape of the prot. . . 	 			In 				Jekyll, 				tutorial, 								Jan 27, 2019						            		Red Riding Hood	: 		  The first mass-produced book to deviate from a rectilinear format, at least in the United States, is thought to be this 1863 edition of Red Riding Hood, cut into the shape of the prot. . . 	 			In 				Jekyll, 				tutorial, 								Jan 26, 2019						            		Press and education	: 		  Even the press, the classroom, the platform, and the pulpit in many instances do not give us objective and unbiased truths. To save man from the morass of propaganda, in my opinion, i. . . 	 			In 				Jekyll, 				tutorial, 								Jan 25, 2019						            		Powerful things you can do with the Markdown editor	: 		  There are lots of powerful things you can do with the Markdown editor	 			In 				Jekyll, 				tutorial, 								Jan 24, 2019						            		Never stopped worrying or loving the bomb	: 		  I’ve been through fire and water, I tell you! From my earliest pebblehood the wildest things you could imagine have been happening to this world of ours, and I have been right in the . . . 	 			In 				Jekyll, 								Jan 22, 2019						            		Is Intelligence Enough	: 		  Education must also train one for quick, resolute and effective thinking. To think incisively and to think for one’s self is very difficult. We are prone to let our mental life become. . . 	 			In 				Jekyll, 				tutorial, 								Jan 21, 2019						            		Quick Start Guide	: 		  If you already have a full Ruby development environment with all headers and RubyGems installed (see Jekyll’s requirements), you can create a new Jekyll site by doing the following:	 			In 				Jekyll, 				tutorial, 								Jan 20, 2019						        "
+    "body": "                        {{page. title}} Follow:         {{ site. authors. sal. site }}         {{ site. authors. sal. bio }}                                   Posts by {{page. title}}:       {% assign posts = site. posts | where: author , sal  %}      {% for post in posts %}      {% include main-loop-card. html %}      {% endfor %}  "
     }, {
     "id": 4,
     "url": "http://localhost:4000/magazine/authors-list.html",
@@ -163,7 +167,7 @@ var documents = [{
     "id": 13,
     "url": "http://localhost:4000/magazine/welcome-to-jekyll/",
     "title": "Welcome to Jekyll!",
-    "body": "2019/02/04 - You’ll find this post in your _posts directory. Go ahead and edit it and re-build the site to see your changes. You can rebuild the site in many different ways, but the most common way is to run jekyll serve, which launches a web server and auto-regenerates your site when a file is updated. To add new posts, simply add a file in the _posts directory that follows the convention YYYY-MM-DD-name-of-post. ext and includes the necessary front matter. Take a look at the source for this post to get an idea about how it works. Jekyll also offers powerful support for code snippets: def print_hi(name) puts  Hi, #{name} endprint_hi('Tom')#=&gt; prints 'Hi, Tom' to STDOUT. Check out the Jekyll docs for more info on how to get the most out of Jekyll. File all bugs/feature requests at Jekyll’s GitHub repo. If you have questions, you can ask them on Jekyll Talk. "
+    "body": "2019/02/04 - You’ll find this post in your _posts directory. Go ahead and edit it and re-build the site to see your changes. You can rebuild the site in many different ways, but the most common way is to run jekyll serve, which launches a web server and auto-regenerates your site when a file is updated. To add new posts, simply add a file in the _posts directory that follows the convention YYYY-MM-DD-name-of-post. ext and includes the necessary front matter. Take a look at the source for this post to get an idea about how it works. Jekyll also offers powerful support for code snippets: {% highlight ruby %}def print_hi(name) puts “Hi, #{name}”endprint_hi(‘Tom’)#=&gt; prints ‘Hi, Tom’ to STDOUT. {% endhighlight %} Check out the Jekyll docs for more info on how to get the most out of Jekyll. File all bugs/feature requests at Jekyll’s GitHub repo. If you have questions, you can ask them on Jekyll Talk. "
     }, {
     "id": 14,
     "url": "http://localhost:4000/magazine/powerful-things-markdown-editor/",
@@ -316,319 +320,194 @@ function lunr_search(term) {
 
     <!-- Content -->
     <main role="main" class="site-content">
-        <div class="container">
-<div class="row justify-content-center">
-    <div class="col-md-8">        
-        <div class="row align-items-center mb-5">
-            <div class="col-md-9">
-                <h2 class="font-weight-bold">Sal <span class="small btn btn-outline-success btn-sm btn-round"><a href="https://twitter.com/wowthemesnet">Follow</a></span></h2>
-                <p><a href="https://www.wowthemes.net">https://www.wowthemes.net</a></p>
-                <p class="excerpt">Hi, I am Sal, the author of Mundana, the theme you're currently previewing. I hope you like it!</p>
+        
+<div class="container">
+<div class="jumbotron jumbotron-fluid mb-3 pl-0 pt-0 pb-0 bg-white position-relative">
+		<div class="h-100 tofront">
+			<div class="row  justify-content-between ">
+				<div class=" col-md-6  pr-0 pr-md-4 pt-4 pb-4 align-self-center">
+					<p class="text-uppercase font-weight-bold">
+                        <span class="catlist">
+						
+                          <a class="sscroll text-danger" href="/magazine/categories.html#jekyll">jekyll</a><span class="sep">, </span>
+                        
+                          <a class="sscroll text-danger" href="/magazine/categories.html#tutorial">tutorial</a><span class="sep">, </span>
+                        
+                        </span>
+					</p>
+					<h1 class="display-4 mb-4 article-headline">Markdown Example</h1>
+					<div class="d-flex align-items-center">
+                        
+                        <img class="rounded-circle" src="/magazine//assets/images/avatar2.jpg" alt="Dr.Meteor" width="70"/>
+                        
+						<small class="ml-3"> Dr.Meteor <span><a target="_blank" href="https://www.linkedin.com/in/wonkyung-kim-007a66189/" class="btn btn-outline-success btn-sm btn-round ml-1">Follow</a></span>
+                            <span class="text-muted d-block mt-1">Jan 19, 2019 · <span class="reading-time">
+  
+  
+    1 min read
+  
+</span>
+    </span>
+						</small>
+					</div>
+				</div>
+                
+				<div class="col-md-6 pr-0 align-self-center">
+					<img class="rounded" src="/magazine/assets/images/6.jpg" alt="Markdown Example">
+				</div>
+                
+			</div>
+		</div>
+	</div>
+</div>
+
+
+
+
+
+<div class="container-lg pt-4 pb-4">
+	<div class="row justify-content-center">
+        
+        
+        <!-- Share -->
+		<div class="col-lg-2 pr-4 mb-4 col-md-12">
+			<div class="sticky-top sticky-top-offset text-center">
+				<div class="text-muted">
+					Share this
+				</div>
+				<div class="share d-inline-block">
+					<!-- AddToAny BEGIN -->
+					<div class="a2a_kit a2a_kit_size_32 a2a_default_style">
+						<a class="a2a_dd" href="https://www.addtoany.com/share"></a>
+						<a class="a2a_button_facebook"></a>
+						<a class="a2a_button_twitter"></a>
+					</div>
+					<script async src="https://static.addtoany.com/menu/page.js"></script>
+					<!-- AddToAny END -->
+				</div>
+			</div>
+		</div>
+        
+        
+		<div class="col-md-12 col-lg-8">
+            
+            <!-- Article -->
+			<article class="article-post">                
+			<p>You’ll find this post in your <code class="language-plaintext highlighter-rouge">_posts</code> directory. Go ahead and edit it and re-build the site to see your changes. You can rebuild the site in many different ways, but the most common way is to run <code class="language-plaintext highlighter-rouge">jekyll serve</code>, which launches a web server and auto-regenerates your site when a file is updated. Something.</p>
+
+<p>To add new posts, simply add a file in the <code class="language-plaintext highlighter-rouge">_posts</code> directory that follows the convention <code class="language-plaintext highlighter-rouge">YYYY-MM-DD-name-of-post.ext</code> and includes the necessary front matter. Take a look at the source for this post to get an idea about how it works.</p>
+
+<p>Jekyll also offers powerful support for code snippets:</p>
+
+<figure class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="k">def</span> <span class="nf">print_hi</span><span class="p">(</span><span class="nb">name</span><span class="p">)</span>
+  <span class="nb">puts</span> <span class="s2">"Hi, </span><span class="si">#{</span><span class="nb">name</span><span class="si">}</span><span class="s2">"</span>
+<span class="k">end</span>
+<span class="n">print_hi</span><span class="p">(</span><span class="s1">'Tom'</span><span class="p">)</span>
+<span class="c1">#=&gt; prints 'Hi, Tom' to STDOUT.</span></code></pre></figure>
+
+<p>Check out the <a href="http://jekyllrb.com/docs/home">Jekyll docs</a> for more info on how to get the most out of Jekyll. File all bugs/feature requests at <a href="https://github.com/jekyll/jekyll">Jekyll’s GitHub repo</a>. If you have questions, you can ask them on <a href="https://talk.jekyllrb.com/">Jekyll Talk</a>.</p>
+
+                
+			</article>
+			
+			<!-- Tags -->
+			<div class="mb-4">
+				<span class="taglist">
+				
+				  <a class="sscroll btn btn-light btn-sm font-weight-bold" href="/magazine/tags.html#featured">featured</a>
+				
+				</span>
+			</div>
+ 
+            <!-- Mailchimp Subscribe Form -->
+            
+			<div class="border p-5 bg-lightblue">
+				<div class="row justify-content-between">
+					<div class="col-md-6 mb-2 mb-md-0">
+						<h5 class="font-weight-bold">Join Newsletter</h5>
+						 Get the latest news right in your inbox. We never spam!
+					</div>
+					<div class="col-md-6">
+						<div class="row">
+                            <form action="https://wowthemes.us11.list-manage.com/subscribe/post?u=8aeb20a530e124561927d3bd8&amp;id=8c3d2d214b" method="post" name="mc-embedded-subscribe-form" class="wj-contact-form validate w-100" target="_blank" novalidate>
+                            <div class="mc-field-group">
+							
+								<input type="email" placeholder="Enter e-mail address" name="EMAIL" class="required email form-control w-100" id="mce-EMAIL" autocomplete="on" required>
+							
+							
+								<button type="submit" value="Subscribe" name="subscribe" class="heart btn btn-success btn-block w-100 mt-2">Subscribe</button>
+							
+                            </div>
+                            </form>
+						</div>
+					</div>
+				</div>
+			</div>
+            
+            
+            
+             <!-- Author Box -->
+                				
+				<div class="row mt-5">
+					<div class="col-md-2 align-self-center">
+                         
+                        <img class="rounded-circle" src="/magazine//assets/images/avatar2.jpg" alt="Dr.Meteor" width="90"/>
+                         
+					</div>
+					<div class="col-md-10">		
+                        <h5 class="font-weight-bold">Written by Dr.Meteor <span><a target="_blank" href="https://www.linkedin.com/in/wonkyung-kim-007a66189/" class="btn btn-outline-success btn-sm btn-round ml-2">Follow</a></span></h5>
+						Wayfarer who intersects interests: from Humanities to Entertainment					
+					</div>
+				</div>				
+                
+            
+            <!-- Comments -->
+            
+                <!--  Don't edit anything here. Set your disqus id in _config.yml -->
+
+<div id="comments" class="mt-5">
+    <div id="disqus_thread">
+    </div>
+    <script type="text/javascript">
+        var disqus_shortname = 'demowebsite'; 
+        var disqus_developer = 0;
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = window.location.protocol + '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>
+    Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+    </noscript>
+</div>
+            
+            
+		</div>
+        
+        
+	</div>
+</div>
+
+
+<!-- Aletbar Prev/Next -->
+<div class="alertbar">
+    <div class="container">
+        <div class="row prevnextlinks small font-weight-bold">
+          
+            <div class="col-md-6 rightborder pl-0">
+                <a class="text-dark" href="/magazine/customer-service/"> <img height="30px" class="mr-1" src="/magazine/assets/images/11.jpg">  What is Jekyll</a>
             </div>
-            <div class="col-md-3 text-right">
-                <img alt="Sal" src="/magazine//assets/images/avatar1.jpg" class="rounded-circle" height="100" width="100">
+          
+          
+            <div class="col-md-6 text-right pr-0">
+                <a class="text-dark" href="/magazine/quick-start-guide/"> Quick Start Guide  <img height="30px" class="ml-1" src="/magazine/assets/images/12.jpg"> </a>
             </div>
+          
         </div>
-        <h4 class="font-weight-bold spanborder"><span>Posts by Sal</span></h4>
-            
-            
-            <div class="mb-5 d-flex justify-content-between main-loop-card">
-<div class="pr-3">
-	<h2 class="mb-1 h4 font-weight-bold">
-	<a class="text-dark" href="/magazine/first-mass-produced/">The first mass-produced book to deviate from a rectilinear format</a>
-	</h2>
-	<p class="excerpt">
-	   The first mass-produced book to deviate from a rectilinear format, at least in the United States, is thought to be this 1863 edition of Red Riding Hood, cut into the shape of the prot...
-	</p>
-	<small class="d-block text-muted">
-		In <span class="catlist">
-		
-		<a class="text-capitalize text-muted smoothscroll" href="/magazine/categories.html#tutorial">tutorial</a><span class="sep">, </span>
-		
-		</span>
-	</small>
-	<small class="text-muted">
-		Feb 02, 2019
-	</small>
-</div>
-
-	<div class="col-md-3 pr-0 text-right">
-	<a href="/magazine/first-mass-produced/">
-	<img class="w-100" src="/magazine/assets/images/17.jpg" alt="The first mass-produced book to deviate from a rectilinear format">
-	</a>
-	</div>
-
-</div>
-            
-            <div class="mb-5 d-flex justify-content-between main-loop-card">
-<div class="pr-3">
-	<h2 class="mb-1 h4 font-weight-bold">
-	<a class="text-dark" href="/magazine/acumulated-experience/">Accumulated experience of social living</a>
-	</h2>
-	<p class="excerpt">
-	   The die cut has also been employed in the non-juvenile sphere as well, a recent example being Jonathan Safran Foer’s ambitious Tree of Codes.
-	</p>
-	<small class="d-block text-muted">
-		In <span class="catlist">
-		
-		<a class="text-capitalize text-muted smoothscroll" href="/magazine/categories.html#jekyll">Jekyll</a><span class="sep">, </span>
-		
-		<a class="text-capitalize text-muted smoothscroll" href="/magazine/categories.html#tutorial">tutorial</a><span class="sep">, </span>
-		
-		</span>
-	</small>
-	<small class="text-muted">
-		Jan 30, 2019
-	</small>
-</div>
-
-	<div class="col-md-3 pr-0 text-right">
-	<a href="/magazine/acumulated-experience/">
-	<img class="w-100" src="/magazine/assets/images/15.jpg" alt="Accumulated experience of social living">
-	</a>
-	</div>
-
-</div>
-            
-            <div class="mb-5 d-flex justify-content-between main-loop-card">
-<div class="pr-3">
-	<h2 class="mb-1 h4 font-weight-bold">
-	<a class="text-dark" href="/magazine/about-bundler/">About Bundler</a>
-	</h2>
-	<p class="excerpt">
-	   gem install bundler installs the bundler gem through RubyGems. You only need to install it once - not every time you create a new Jekyll project. Here are some additional details:
-	</p>
-	<small class="d-block text-muted">
-		In <span class="catlist">
-		
-		<a class="text-capitalize text-muted smoothscroll" href="/magazine/categories.html#jekyll">Jekyll</a><span class="sep">, </span>
-		
-		</span>
-	</small>
-	<small class="text-muted">
-		Jan 29, 2019
-	</small>
-</div>
-
-	<div class="col-md-3 pr-0 text-right">
-	<a href="/magazine/about-bundler/">
-	<img class="w-100" src="/magazine/assets/images/2.jpg" alt="About Bundler">
-	</a>
-	</div>
-
-</div>
-            
-            <div class="mb-5 d-flex justify-content-between main-loop-card">
-<div class="pr-3">
-	<h2 class="mb-1 h4 font-weight-bold">
-	<a class="text-dark" href="/magazine/tree-of-codes/">Tree of Codes</a>
-	</h2>
-	<p class="excerpt">
-	   The first mass-produced book to deviate from a rectilinear format, at least in the United States, is thought to be this 1863 edition of Red Riding Hood, cut into the shape of the prot...
-	</p>
-	<small class="d-block text-muted">
-		In <span class="catlist">
-		
-		<a class="text-capitalize text-muted smoothscroll" href="/magazine/categories.html#jekyll">Jekyll</a><span class="sep">, </span>
-		
-		<a class="text-capitalize text-muted smoothscroll" href="/magazine/categories.html#tutorial">tutorial</a><span class="sep">, </span>
-		
-		</span>
-	</small>
-	<small class="text-muted">
-		Jan 27, 2019
-	</small>
-</div>
-
-	<div class="col-md-3 pr-0 text-right">
-	<a href="/magazine/tree-of-codes/">
-	<img class="w-100" src="/magazine/assets/images/2.jpg" alt="Tree of Codes">
-	</a>
-	</div>
-
-</div>
-            
-            <div class="mb-5 d-flex justify-content-between main-loop-card">
-<div class="pr-3">
-	<h2 class="mb-1 h4 font-weight-bold">
-	<a class="text-dark" href="/magazine/red-riding/">Red Riding Hood</a>
-	</h2>
-	<p class="excerpt">
-	   The first mass-produced book to deviate from a rectilinear format, at least in the United States, is thought to be this 1863 edition of Red Riding Hood, cut into the shape of the prot...
-	</p>
-	<small class="d-block text-muted">
-		In <span class="catlist">
-		
-		<a class="text-capitalize text-muted smoothscroll" href="/magazine/categories.html#jekyll">Jekyll</a><span class="sep">, </span>
-		
-		<a class="text-capitalize text-muted smoothscroll" href="/magazine/categories.html#tutorial">tutorial</a><span class="sep">, </span>
-		
-		</span>
-	</small>
-	<small class="text-muted">
-		Jan 26, 2019
-	</small>
-</div>
-
-	<div class="col-md-3 pr-0 text-right">
-	<a href="/magazine/red-riding/">
-	<img class="w-100" src="/magazine/assets/images/3.jpg" alt="Red Riding Hood">
-	</a>
-	</div>
-
-</div>
-            
-            <div class="mb-5 d-flex justify-content-between main-loop-card">
-<div class="pr-3">
-	<h2 class="mb-1 h4 font-weight-bold">
-	<a class="text-dark" href="/magazine/press-and-education/">Press and education</a>
-	</h2>
-	<p class="excerpt">
-	   Even the press, the classroom, the platform, and the pulpit in many instances do not give us objective and unbiased truths. To save man from the morass of propaganda, in my opinion, i...
-	</p>
-	<small class="d-block text-muted">
-		In <span class="catlist">
-		
-		<a class="text-capitalize text-muted smoothscroll" href="/magazine/categories.html#jekyll">Jekyll</a><span class="sep">, </span>
-		
-		<a class="text-capitalize text-muted smoothscroll" href="/magazine/categories.html#tutorial">tutorial</a><span class="sep">, </span>
-		
-		</span>
-	</small>
-	<small class="text-muted">
-		Jan 25, 2019
-	</small>
-</div>
-
-	<div class="col-md-3 pr-0 text-right">
-	<a href="/magazine/press-and-education/">
-	<img class="w-100" src="/magazine/assets/images/7.jpg" alt="Press and education">
-	</a>
-	</div>
-
-</div>
-            
-            <div class="mb-5 d-flex justify-content-between main-loop-card">
-<div class="pr-3">
-	<h2 class="mb-1 h4 font-weight-bold">
-	<a class="text-dark" href="/magazine/powerful-things-markdown-editor/">Powerful things you can do with the Markdown editor</a>
-	</h2>
-	<p class="excerpt">
-	   There are lots of powerful things you can do with the Markdown editor
-	</p>
-	<small class="d-block text-muted">
-		In <span class="catlist">
-		
-		<a class="text-capitalize text-muted smoothscroll" href="/magazine/categories.html#jekyll">Jekyll</a><span class="sep">, </span>
-		
-		<a class="text-capitalize text-muted smoothscroll" href="/magazine/categories.html#tutorial">tutorial</a><span class="sep">, </span>
-		
-		</span>
-	</small>
-	<small class="text-muted">
-		Jan 24, 2019
-	</small>
-</div>
-
-	<div class="col-md-3 pr-0 text-right">
-	<a href="/magazine/powerful-things-markdown-editor/">
-	<img class="w-100" src="/magazine/assets/images/4.jpg" alt="Powerful things you can do with the Markdown editor">
-	</a>
-	</div>
-
-</div>
-            
-            <div class="mb-5 d-flex justify-content-between main-loop-card">
-<div class="pr-3">
-	<h2 class="mb-1 h4 font-weight-bold">
-	<a class="text-dark" href="/magazine/never-stopped-worrying-never-loved-bomb/">Never stopped worrying or loving the bomb</a>
-	</h2>
-	<p class="excerpt">
-	   I’ve been through fire and water, I tell you! From my earliest pebblehood the wildest things you could imagine have been happening to this world of ours, and I have been right in the ...
-	</p>
-	<small class="d-block text-muted">
-		In <span class="catlist">
-		
-		<a class="text-capitalize text-muted smoothscroll" href="/magazine/categories.html#jekyll">Jekyll</a><span class="sep">, </span>
-		
-		</span>
-	</small>
-	<small class="text-muted">
-		Jan 22, 2019
-	</small>
-</div>
-
-	<div class="col-md-3 pr-0 text-right">
-	<a href="/magazine/never-stopped-worrying-never-loved-bomb/">
-	<img class="w-100" src="/magazine/assets/images/14.jpg" alt="Never stopped worrying or loving the bomb">
-	</a>
-	</div>
-
-</div>
-            
-            <div class="mb-5 d-flex justify-content-between main-loop-card">
-<div class="pr-3">
-	<h2 class="mb-1 h4 font-weight-bold">
-	<a class="text-dark" href="/magazine/is-intelligence-enough/">Is Intelligence Enough</a>
-	</h2>
-	<p class="excerpt">
-	   Education must also train one for quick, resolute and effective thinking. To think incisively and to think for one’s self is very difficult. We are prone to let our mental life become...
-	</p>
-	<small class="d-block text-muted">
-		In <span class="catlist">
-		
-		<a class="text-capitalize text-muted smoothscroll" href="/magazine/categories.html#jekyll">Jekyll</a><span class="sep">, </span>
-		
-		<a class="text-capitalize text-muted smoothscroll" href="/magazine/categories.html#tutorial">tutorial</a><span class="sep">, </span>
-		
-		</span>
-	</small>
-	<small class="text-muted">
-		Jan 21, 2019
-	</small>
-</div>
-
-	<div class="col-md-3 pr-0 text-right">
-	<a href="/magazine/is-intelligence-enough/">
-	<img class="w-100" src="https://images.unsplash.com/photo-1523740856324-f2ce89135981?ixlib=rb-1.2.1&auto=format&fit=crop&w=798&q=80" alt="Is Intelligence Enough">
-	</a>
-	</div>
-
-</div>
-            
-            <div class="mb-5 d-flex justify-content-between main-loop-card">
-<div class="pr-3">
-	<h2 class="mb-1 h4 font-weight-bold">
-	<a class="text-dark" href="/magazine/quick-start-guide/">Quick Start Guide</a>
-	</h2>
-	<p class="excerpt">
-	   If you already have a full Ruby development environment with all headers and RubyGems installed (see Jekyll’s requirements), you can create a new Jekyll site by doing the following:
-	</p>
-	<small class="d-block text-muted">
-		In <span class="catlist">
-		
-		<a class="text-capitalize text-muted smoothscroll" href="/magazine/categories.html#jekyll">Jekyll</a><span class="sep">, </span>
-		
-		<a class="text-capitalize text-muted smoothscroll" href="/magazine/categories.html#tutorial">tutorial</a><span class="sep">, </span>
-		
-		</span>
-	</small>
-	<small class="text-muted">
-		Jan 20, 2019
-	</small>
-</div>
-
-	<div class="col-md-3 pr-0 text-right">
-	<a href="/magazine/quick-start-guide/">
-	<img class="w-100" src="/magazine/assets/images/12.jpg" alt="Quick Start Guide">
-	</a>
-	</div>
-
-</div>
-            
     </div>
 </div>
-</div>
+
     </main>
 
 
