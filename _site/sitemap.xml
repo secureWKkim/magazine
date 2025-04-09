@@ -5,10 +5,6 @@
 <lastmod>2019-01-18T00:00:00+09:00</lastmod>
 </url>
 <url>
-<loc>http://localhost:4000/magazine/customer-service/</loc>
-<lastmod>2019-01-18T00:00:00+09:00</lastmod>
-</url>
-<url>
 <loc>http://localhost:4000/magazine/markup-example/</loc>
 <lastmod>2019-01-19T00:00:00+09:00</lastmod>
 </url>
@@ -71,6 +67,10 @@
 <url>
 <loc>http://localhost:4000/magazine/welcome-to-jekyll/</loc>
 <lastmod>2019-02-04T00:00:00+09:00</lastmod>
+</url>
+<url>
+<loc>http://localhost:4000/magazine/about-game-program-architecture/</loc>
+<lastmod>2025-04-09T00:00:00+09:00</lastmod>
 </url>
 <url>
 <loc>http://localhost:4000/magazine/404/</loc>

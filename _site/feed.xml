@@ -1,4 +1,177 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="http://localhost:4000/magazine/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/magazine/" rel="alternate" type="text/html" /><updated>2025-04-09T18:05:58+09:00</updated><id>http://localhost:4000/magazine/feed.xml</id><title type="html">Eyes can blaze like Meteors!🌠</title><subtitle>Mundana is a free Jekyll theme for awesome people like you, Medium like.</subtitle><entry><title type="html">Welcome to Jekyll!</title><link href="http://localhost:4000/magazine/welcome-to-jekyll/" rel="alternate" type="text/html" title="Welcome to Jekyll!" /><published>2019-02-04T00:00:00+09:00</published><updated>2019-02-04T00:00:00+09:00</updated><id>http://localhost:4000/magazine/welcome-to-jekyll</id><content type="html" xml:base="http://localhost:4000/magazine/welcome-to-jekyll/"><![CDATA[<p>You’ll find this post in your <code class="language-plaintext highlighter-rouge">_posts</code> directory. Go ahead and edit it and re-build the site to see your changes. You can rebuild the site in many different ways, but the most common way is to run <code class="language-plaintext highlighter-rouge">jekyll serve</code>, which launches a web server and auto-regenerates your site when a file is updated.</p>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="http://localhost:4000/magazine/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/magazine/" rel="alternate" type="text/html" /><updated>2025-04-09T19:37:29+09:00</updated><id>http://localhost:4000/magazine/feed.xml</id><title type="html">Eyes can blaze like Meteors!🌠</title><subtitle>Mundana is a free Jekyll theme for awesome people like you, Medium like.</subtitle><entry><title type="html">게임 개발은 유니티 하나로 끝? 게임 개발의 기술 스택과 구조 이해하기 (feat.MMORPG, 퍼즐)</title><link href="http://localhost:4000/magazine/about-game-program-architecture/" rel="alternate" type="text/html" title="게임 개발은 유니티 하나로 끝? 게임 개발의 기술 스택과 구조 이해하기 (feat.MMORPG, 퍼즐)" /><published>2025-04-09T00:00:00+09:00</published><updated>2025-04-09T00:00:00+09:00</updated><id>http://localhost:4000/magazine/about-game-program-architecture</id><content type="html" xml:base="http://localhost:4000/magazine/about-game-program-architecture/"><![CDATA[<p>저는 웹, 앱, 데이터 분야 개발에는 익숙하지만, 게임 개발은 유니티와 언리얼만 알 뿐 구조나 기술 스택은 생소하여 이 글을 쓰게 되었습니다. 간단하게 공부해본 결과, 게임은 클라이언트-서버 아키텍처는 물론 실시간 통신, 인프라, 운영 툴까지 웹/앱 이상으로 복잡한 구조를 갖추고 있었습니다. 이 글에서는 게임 개발의 전체적인 아키텍처와 사용 기술, 엔진의 역할까지 정리했습니다.<br /><br /><br /></p>
+
+<h3 id="-게임-개발의-전체-구조">🎮 게임 개발의 전체 구조</h3>
+
+<p>게임 개발도 웹 서비스처럼 <strong>기획 → 개발 → 테스트 → 출시 → 운영</strong>이라는 사이클을 따릅니다. 하지만 내부 구조와 요구되는 기술은 꽤 다릅니다.<br />
+게임은 무엇보다 <strong>실시간성</strong>과 <strong>높은 사용자 경험(UX)</strong>을 요구하기 때문에, 아키텍처도 여기에 맞춰 구성됩니다.<br /><br /><br /></p>
+
+<h3 id="️-기본-아키텍처-클라이언트---서버---db">🏗️ 기본 아키텍처: 클라이언트 - 서버 - DB</h3>
+
+<p>게임도 기본적으로는 클라이언트와 서버, 그리고 데이터 저장소로 구성됩니다.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[클라이언트(Unity/Unreal)]  &lt;--&gt;  [게임 서버]  &lt;--&gt;  [DB, 캐시 등]
+                                        │
+                                        └── [운영툴 서버, API 게이트웨이 등]
+</code></pre></div></div>
+
+<h4 id="-클라이언트">🔹 클라이언트</h4>
+<ul>
+  <li>Unity (C#), Unreal Engine (C++) 등 게임 엔진을 사용</li>
+  <li>그래픽, 물리 엔진, UI, 애니메이션, 사운드, 입력 처리 등 포함</li>
+  <li>WebSocket이나 TCP/UDP 통신 기능 내장 또는 확장 가능</li>
+</ul>
+
+<h4 id="-게임-서버">🔹 게임 서버</h4>
+<ul>
+  <li>실시간 멀티플레이, 전투 로직, 유저 세션, 매치메이킹 등 처리</li>
+  <li>Java, Node.js, Go, C#, C++ 등 다양한 언어로 커스텀 구현</li>
+  <li>Redis, MySQL, MongoDB, Cassandra 등 다양한 DB 사용
+<br /><br /><br /></li>
+</ul>
+
+<h3 id="-게임-서버-구조는-어떻게-생겼을까">🧠 게임 서버 구조는 어떻게 생겼을까?</h3>
+
+<p>게임의 장르에 따라 서버 구조도 달라집니다.</p>
+
+<p>예를 들어 MMORPG처럼 대규모 유저가 동시에 접속하는 게임은 다음과 같은 <strong>마이크로서비스 아키텍처</strong> 형태를 가질 수 있습니다.</p>
+<ul>
+  <li>Zone 서버 (맵/지역 단위로 분리)</li>
+  <li>매치메이킹 서버</li>
+  <li>채팅 서버</li>
+  <li>AI 서버</li>
+  <li>인증 및 과금 서버</li>
+  <li>운영툴 서버</li>
+</ul>
+
+<p>실시간 처리를 위해 TCP/UDP 기반 통신을 주로 사용하고, 일부 시스템은 REST API나 gRPC로도 구성합니다.
+<br /></p>
+
+<p>그렇다면 퍼즐 게임은 어떨까요? 경우에 따라 다르지만, 여기선 MMORPG에 비하면 비교적 단순한 <strong>클라이언트-서버</strong> 구조를 갖는 예시로 캐주얼 퍼즐 게임을 들어보겠습니다.</p>
+
+<p>캔디크러쉬사가, 애니팡 같은 캐주얼 퍼즐 게임의 특징은 다음과 같습니다.</p>
+<ul>
+  <li>싱글 플레이 중심</li>
+  <li>실시간성 거의 없음</li>
+  <li>서버는 주로 유저 정보 동기화, 랭킹, 광고, 과금 처리 담당</li>
+  <li>대부분은 비동기 구조 + 클라이언트 중심 설계</li>
+</ul>
+
+<p>따라서 클라이언트가 대부분의 게임 로직을 처리하고, 서버는 기록과 검증만 맡는 구조가 일반적입니다. 이 경우 서버는 주로 다음과 같은 기능을 수행합니다.</p>
+<ul>
+  <li>유저 계정 관리 (게스트, 소셜 로그인 등)</li>
+  <li>스테이지 클리어 기록 저장</li>
+  <li>하트, 아이템 보유량 동기화</li>
+  <li>과금/광고 보상 처리</li>
+  <li>랭킹 (주로 비동기: 일일/주간 등)</li>
+</ul>
+
+<p>이 경우 DB에는 유저 상태, 인벤토리 등이 저장될 것이고, 광고, 결제, 랭킹, 푸시 등의 기능은 내외부 API가 수행할 것입니다.
+<br /><br /><br /></p>
+
+<h3 id="-유니티언리얼의-주요-역할">🧱 유니티/언리얼의 주요 역할</h3>
+
+<p>유니티와 언리얼은 주로 <strong>클라이언트 개발</strong>에 집중된 엔진입니다.</p>
+
+<h4 id="주요-역할">주요 역할:</h4>
+<ul>
+  <li>3D/2D 렌더링</li>
+  <li>물리 엔진 처리</li>
+  <li>UI 구성</li>
+  <li>애니메이션 시스템</li>
+  <li>오디오 처리</li>
+  <li>일부 네트워크 기능</li>
+</ul>
+
+<p>그렇기 때문에 유니티, 언리얼이 기획자에게 프로토타이핑 툴로도 쓰일 수 있는 것입니다. 반면, 주 역할이 아닌 것은 다음과 같습니다.</p>
+<ul>
+  <li>게임 서버 로직 개발 (멀티플레이 동기화, 매치메이킹 등)</li>
+  <li>데이터베이스 저장/조회</li>
+  <li>인증, 과금, 이벤트 운영</li>
+  <li>대시보드/운영툴 개발</li>
+  <li>로그 수집, 분석</li>
+</ul>
+
+<p>그렇지만 앞서 나왔던 캐주얼 퍼즐 장르처럼 비교적 단순한 게임의 경우, 클라이언트가 게임의 주요 로직을 처리하기도 합니다.
+<br /><br /><br /></p>
+
+<h3 id="-주요-기술-스택">🧰 주요 기술 스택</h3>
+<p>게임 클라이언트, 서버, 인프라/DevOps 분야의 주요 기술 스택을 정리하면 다음과 같습니다.</p>
+
+<h4 id="-클라이언트-1">🎮 클라이언트</h4>
+
+<table>
+  <thead>
+    <tr>
+      <th>기능</th>
+      <th>기술 스택</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>그래픽/물리/애니메이션</td>
+      <td>Unity, Unreal Engine</td>
+    </tr>
+    <tr>
+      <td>UI</td>
+      <td>엔진 내 UI 시스템, TextMeshPro 등</td>
+    </tr>
+    <tr>
+      <td>오디오</td>
+      <td>FMOD, Wwise 등</td>
+    </tr>
+    <tr>
+      <td>네트워크</td>
+      <td>WebSocket, TCP/UDP, Photon, Mirror 등</td>
+    </tr>
+  </tbody>
+</table>
+
+<h4 id="-서버">🧠 서버</h4>
+
+<table>
+  <thead>
+    <tr>
+      <th>기능</th>
+      <th>기술 스택</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>게임 로직</td>
+      <td>Java, Node.js, C#, C++ 등</td>
+    </tr>
+    <tr>
+      <td>데이터 저장</td>
+      <td>MySQL, MongoDB, Redis, Cassandra 등</td>
+    </tr>
+    <tr>
+      <td>세션/매치메이킹</td>
+      <td>자체 구현 또는 BaaS (PlayFab, Nakama 등)</td>
+    </tr>
+    <tr>
+      <td>인증/결제</td>
+      <td>OAuth, Firebase Auth, AWS Cognito 등</td>
+    </tr>
+  </tbody>
+</table>
+
+<h4 id="-인프라-및-devops">🛠 인프라 및 DevOps</h4>
+
+<ul>
+  <li><strong>인프라</strong>: Docker, Kubernetes, AWS/GCP</li>
+  <li><strong>배포/CI</strong>: GitHub Actions, Jenkins, ArgoCD</li>
+  <li><strong>모니터링/로깅</strong>: Prometheus, Grafana, ELK, Sentry</li>
+  <li><strong>콘텐츠 배포</strong>: CDN 기반 패치 시스템
+<br /><br /><br /></li>
+</ul>
+
+<h3 id="-마무리">✅ 마무리</h3>
+
+<p>게임 개발은 처음 접하면 유니티, 언리얼로 모든 걸 다 할 수 있을 것 같지만, 실제로는 복잡한 분산 시스템과 다양한 기술 스택이 함께 움직이는 종합 개발입니다.</p>
+
+<p>웹이나 앱 개발에 익숙한 사람이라면, <strong>서버 아키텍처, 통신 구조, DevOps 등 익숙한 개념들이 게임에서도 적용되지만</strong>, <strong>실시간성과 사용자 경험에 훨씬 민감한 환경</strong>이라는 점이 차이점입니다.</p>
+
+<p>처음 게임 개발을 알아보시는 다른 분들에게도 이 글이 도움되었길 바라며 마치겠습니다.</p>]]></content><author><name>Dr.Meteor</name></author><category term="Game Development" /><summary type="html"><![CDATA[저는 웹, 앱, 데이터 분야 개발에는 익숙하지만, 게임 개발은 유니티와 언리얼만 알 뿐 구조나 기술 스택은 생소하여 이 글을 쓰게 되었습니다. 간단하게 공부해본 결과, 게임은 클라이언트-서버 아키텍처는 물론 실시간 통신, 인프라, 운영 툴까지 웹/앱 이상으로 복잡한 구조를 갖추고 있었습니다. 이 글에서는 게임 개발의 전체적인 아키텍처와 사용 기술, 엔진의 역할까지 정리했습니다.]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="http://localhost:4000/magazine/assets/images/11.jpg" /><media:content medium="image" url="http://localhost:4000/magazine/assets/images/11.jpg" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">Welcome to Jekyll!</title><link href="http://localhost:4000/magazine/welcome-to-jekyll/" rel="alternate" type="text/html" title="Welcome to Jekyll!" /><published>2019-02-04T00:00:00+09:00</published><updated>2019-02-04T00:00:00+09:00</updated><id>http://localhost:4000/magazine/welcome-to-jekyll</id><content type="html" xml:base="http://localhost:4000/magazine/welcome-to-jekyll/"><![CDATA[<p>You’ll find this post in your <code class="language-plaintext highlighter-rouge">_posts</code> directory. Go ahead and edit it and re-build the site to see your changes. You can rebuild the site in many different ways, but the most common way is to run <code class="language-plaintext highlighter-rouge">jekyll serve</code>, which launches a web server and auto-regenerates your site when a file is updated.</p>
 
 <p>To add new posts, simply add a file in the <code class="language-plaintext highlighter-rouge">_posts</code> directory that follows the convention <code class="language-plaintext highlighter-rouge">YYYY-MM-DD-name-of-post.ext</code> and includes the necessary front matter. Take a look at the source for this post to get an idea about how it works.</p>
 
@@ -148,16 +321,4 @@
 
 <p>The die cut has also been employed in the non-juvenile sphere as well, a recent example being Jonathan Safran Foer’s ambitious Tree of Codes.</p>
 
-<p>As for this particular rendition of Charles Perrault’s classic tale, the text and design is by Lydia Very (1823-1901), sister of Transcendentalist poet Jones Very. The gruesome ending of the original — which sees Little Red Riding Hood being gobbled up as well as her grandmother — is avoided here, the gore giving way to the less bloody aims of the morality tale, and the lesson that one should not disobey one’s mother.</p>]]></content><author><name>sal</name></author><category term="Jekyll" /><category term="tutorial" /><summary type="html"><![CDATA[The first mass-produced book to deviate from a rectilinear format, at least in the United States, is thought to be this 1863 edition of Red Riding Hood, cut into the shape of the protagonist herself with the troublesome wolf curled at her feet. Produced by the Boston-based publisher Louis Prang, this is the first in their “Doll Series”, a set of five “die-cut” books, known also as shape books — the other titles being Robinson Crusoe, Goody Two-Shoes (also written by Red Riding Hood author Lydia Very), Cinderella, and King Winter.]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="http://localhost:4000/magazine/assets/images/3.jpg" /><media:content medium="image" url="http://localhost:4000/magazine/assets/images/3.jpg" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">Press and education</title><link href="http://localhost:4000/magazine/press-and-education/" rel="alternate" type="text/html" title="Press and education" /><published>2019-01-25T00:00:00+09:00</published><updated>2019-01-25T00:00:00+09:00</updated><id>http://localhost:4000/magazine/press-and-education</id><content type="html" xml:base="http://localhost:4000/magazine/press-and-education/"><![CDATA[<p>Even the press, the classroom, the platform, and the pulpit in many instances do not give us objective and unbiased truths. To save man from the morass of propaganda, in my opinion, is one of the chief aims of education. Education must enable one to sift and weigh evidence, to discern the true from the false, the real from the unreal, and the facts from the fiction.</p>
-
-<p>Education must also train one for quick, <strong>resolute and effective thinking</strong>. To think incisively and to think for one’s self is very difficult.</p>
-
-<blockquote>
-  <p>We are prone to let our mental life become invaded by legions of half truths, prejudices, and propaganda. At this point, I often wonder whether or not education is fulfilling its purpose. A great majority of the so-called educated people do not think logically and scientifically.</p>
-</blockquote>
-
-<p>The function of education, therefore, is to teach one to think intensively and to think critically. But education which stops with efficiency may prove the greatest menace to society. The most dangerous criminal may be the man gifted with reason, but with no morals.</p>
-
-<p>The late Eugene Talmadge, in my opinion, possessed one of the better minds of Georgia, or even America. Moreover, he wore the Phi Beta Kappa key. By all measuring rods, Mr. Talmadge could think critically and intensively; yet he contends that I am an inferior being. Are those the types of men we call educated?</p>
-
-<p>We must remember that intelligence is not enough. Intelligence plus character–that is the goal of true education. The complete education gives one not only power of concentration, but worthy objectives upon which to concentrate. The broad education will, therefore, transmit to one not only the accumulated knowledge of the race but also the accumulated experience of social living.</p>]]></content><author><name>sal</name></author><category term="Jekyll" /><category term="tutorial" /><summary type="html"><![CDATA[Even the press, the classroom, the platform, and the pulpit in many instances do not give us objective and unbiased truths. To save man from the morass of propaganda, in my opinion, is one of the chief aims of education. Education must enable one to sift and weigh evidence, to discern the true from the false, the real from the unreal, and the facts from the fiction.]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="http://localhost:4000/magazine/assets/images/7.jpg" /><media:content medium="image" url="http://localhost:4000/magazine/assets/images/7.jpg" xmlns:media="http://search.yahoo.com/mrss/" /></entry></feed>
+<p>As for this particular rendition of Charles Perrault’s classic tale, the text and design is by Lydia Very (1823-1901), sister of Transcendentalist poet Jones Very. The gruesome ending of the original — which sees Little Red Riding Hood being gobbled up as well as her grandmother — is avoided here, the gore giving way to the less bloody aims of the morality tale, and the lesson that one should not disobey one’s mother.</p>]]></content><author><name>sal</name></author><category term="Jekyll" /><category term="tutorial" /><summary type="html"><![CDATA[The first mass-produced book to deviate from a rectilinear format, at least in the United States, is thought to be this 1863 edition of Red Riding Hood, cut into the shape of the protagonist herself with the troublesome wolf curled at her feet. Produced by the Boston-based publisher Louis Prang, this is the first in their “Doll Series”, a set of five “die-cut” books, known also as shape books — the other titles being Robinson Crusoe, Goody Two-Shoes (also written by Red Riding Hood author Lydia Very), Cinderella, and King Winter.]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="http://localhost:4000/magazine/assets/images/3.jpg" /><media:content medium="image" url="http://localhost:4000/magazine/assets/images/3.jpg" xmlns:media="http://search.yahoo.com/mrss/" /></entry></feed>
