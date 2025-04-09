@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  게임 개발은 유니티 하나로 끝? 게임 개발의 기술 스택과 구조 이해하기 (feat.MMORPG, 퍼즐)
-author: Dr.Meteor
+author: jane
 categories: [ Game Development ]
 image: assets/images/11.jpg
 ---

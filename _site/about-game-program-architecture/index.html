@@ -10,7 +10,7 @@
 <title>게임 개발은 유니티 하나로 끝? 게임 개발의 기술 스택과 구조 이해하기 (feat.MMORPG, 퍼즐) | Eyes can blaze like Meteors!🌠</title>
 <meta name="generator" content="Jekyll v4.4.1" />
 <meta property="og:title" content="게임 개발은 유니티 하나로 끝? 게임 개발의 기술 스택과 구조 이해하기 (feat.MMORPG, 퍼즐)" />
-<meta name="author" content="Dr.Meteor" />
+<meta name="author" content="jane" />
 <meta property="og:locale" content="en_US" />
 <meta name="description" content="저는 웹, 앱, 데이터 분야 개발에는 익숙하지만, 게임 개발은 유니티와 언리얼만 알 뿐 구조나 기술 스택은 생소하여 이 글을 쓰게 되었습니다. 간단하게 공부해본 결과, 게임은 클라이언트-서버 아키텍처는 물론 실시간 통신, 인프라, 운영 툴까지 웹/앱 이상으로 복잡한 구조를 갖추고 있었습니다. 이 글에서는 게임 개발의 전체적인 아키텍처와 사용 기술, 엔진의 역할까지 정리했습니다." />
 <meta property="og:description" content="저는 웹, 앱, 데이터 분야 개발에는 익숙하지만, 게임 개발은 유니티와 언리얼만 알 뿐 구조나 기술 스택은 생소하여 이 글을 쓰게 되었습니다. 간단하게 공부해본 결과, 게임은 클라이언트-서버 아키텍처는 물론 실시간 통신, 인프라, 운영 툴까지 웹/앱 이상으로 복잡한 구조를 갖추고 있었습니다. 이 글에서는 게임 개발의 전체적인 아키텍처와 사용 기술, 엔진의 역할까지 정리했습니다." />
@@ -24,7 +24,7 @@
 <meta property="twitter:image" content="http://localhost:4000/magazine/assets/images/11.jpg" />
 <meta property="twitter:title" content="게임 개발은 유니티 하나로 끝? 게임 개발의 기술 스택과 구조 이해하기 (feat.MMORPG, 퍼즐)" />
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Dr.Meteor"},"dateModified":"2025-04-09T00:00:00+09:00","datePublished":"2025-04-09T00:00:00+09:00","description":"저는 웹, 앱, 데이터 분야 개발에는 익숙하지만, 게임 개발은 유니티와 언리얼만 알 뿐 구조나 기술 스택은 생소하여 이 글을 쓰게 되었습니다. 간단하게 공부해본 결과, 게임은 클라이언트-서버 아키텍처는 물론 실시간 통신, 인프라, 운영 툴까지 웹/앱 이상으로 복잡한 구조를 갖추고 있었습니다. 이 글에서는 게임 개발의 전체적인 아키텍처와 사용 기술, 엔진의 역할까지 정리했습니다.","headline":"게임 개발은 유니티 하나로 끝? 게임 개발의 기술 스택과 구조 이해하기 (feat.MMORPG, 퍼즐)","image":"http://localhost:4000/magazine/assets/images/11.jpg","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/magazine/about-game-program-architecture/"},"publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"http://localhost:4000/magazine/assets/images/logo.png"},"name":"Dr.Meteor"},"url":"http://localhost:4000/magazine/about-game-program-architecture/"}</script>
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"jane"},"dateModified":"2025-04-09T00:00:00+09:00","datePublished":"2025-04-09T00:00:00+09:00","description":"저는 웹, 앱, 데이터 분야 개발에는 익숙하지만, 게임 개발은 유니티와 언리얼만 알 뿐 구조나 기술 스택은 생소하여 이 글을 쓰게 되었습니다. 간단하게 공부해본 결과, 게임은 클라이언트-서버 아키텍처는 물론 실시간 통신, 인프라, 운영 툴까지 웹/앱 이상으로 복잡한 구조를 갖추고 있었습니다. 이 글에서는 게임 개발의 전체적인 아키텍처와 사용 기술, 엔진의 역할까지 정리했습니다.","headline":"게임 개발은 유니티 하나로 끝? 게임 개발의 기술 스택과 구조 이해하기 (feat.MMORPG, 퍼즐)","image":"http://localhost:4000/magazine/assets/images/11.jpg","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/magazine/about-game-program-architecture/"},"publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"http://localhost:4000/magazine/assets/images/logo.png"},"name":"jane"},"url":"http://localhost:4000/magazine/about-game-program-architecture/"}</script>
 <!-- End Jekyll SEO tag -->
 
 
@@ -110,8 +110,8 @@ var documents = [{
     "body": "Made with by Sal @wowthemesnet. "
     }, {
     "id": 2,
-    "url": "http://localhost:4000/magazine/author-jane.html",
-    "title": "Jane",
+    "url": "http://localhost:4000/magazine/author-dr-meteor.html",
+    "title": "Dr.Meteor",
     "body": "                        {{page. title}} Follow:         {{ site. authors. jane. site }}         {{ site. authors. jane. bio }}                                   Posts by {{page. title}}:       {% assign posts = site. posts | where: author , jane  %}      {% for post in posts %}      {% include main-loop-card. html %}      {% endfor %}  "
     }, {
     "id": 3,
@@ -336,7 +336,9 @@ function lunr_search(term) {
 					<h1 class="display-4 mb-4 article-headline">게임 개발은 유니티 하나로 끝? 게임 개발의 기술 스택과 구조 이해하기 (feat.MMORPG, 퍼즐)</h1>
 					<div class="d-flex align-items-center">
                         
-						<small class="ml-3">  <span><a target="_blank" href="" class="btn btn-outline-success btn-sm btn-round ml-1">Follow</a></span>
+                        <img class="rounded-circle" src="/magazine//assets/images/avatar2.jpg" alt="Dr.Meteor" width="70"/>
+                        
+						<small class="ml-3"> Dr.Meteor <span><a target="_blank" href="https://www.linkedin.com/in/wonkyung-kim-007a66189/" class="btn btn-outline-success btn-sm btn-round ml-1">Follow</a></span>
                             <span class="text-muted d-block mt-1">Apr 09, 2025 · <span class="reading-time">
   
   
@@ -604,11 +606,13 @@ function lunr_search(term) {
                 				
 				<div class="row mt-5">
 					<div class="col-md-2 align-self-center">
-                          
+                         
+                        <img class="rounded-circle" src="/magazine//assets/images/avatar2.jpg" alt="Dr.Meteor" width="90"/>
+                         
 					</div>
 					<div class="col-md-10">		
-                        <h5 class="font-weight-bold">Written by  </h5>
-											
+                        <h5 class="font-weight-bold">Written by Dr.Meteor <span><a target="_blank" href="https://www.linkedin.com/in/wonkyung-kim-007a66189/" class="btn btn-outline-success btn-sm btn-round ml-2">Follow</a></span></h5>
+						Wayfarer who intersects interests: from Humanities to Entertainment					
 					</div>
 				</div>				
                 
