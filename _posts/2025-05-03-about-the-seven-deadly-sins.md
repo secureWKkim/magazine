@@ -1,8 +1,8 @@
 ---
 layout: post
-title: 게임 <일곱 개의 대죄:GRAND CROSS> 분석
+title: 게임 <일곱 개의 대죄:GRAND CROSS> 전체 시스템 소개
 author: jane
-categories: [ 턴제, RPG, 게임 분석 ]
+categories: [ 턴제, 수집형, RPG, 게임 분석 ]
 image: assets/images/18.jpg
 ---
 
