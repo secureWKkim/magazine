@@ -1,14 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 <url>
-<loc>http://localhost:4000/magazine/charm-old-cities/</loc>
-<lastmod>2019-01-18T00:00:00+09:00</lastmod>
-</url>
-<url>
-<loc>http://localhost:4000/magazine/markup-example/</loc>
-<lastmod>2019-01-19T00:00:00+09:00</lastmod>
-</url>
-<url>
 <loc>http://localhost:4000/magazine/quick-start-guide/</loc>
 <lastmod>2019-01-20T00:00:00+09:00</lastmod>
 </url>
@@ -69,8 +61,16 @@
 <lastmod>2019-02-04T00:00:00+09:00</lastmod>
 </url>
 <url>
-<loc>http://localhost:4000/magazine/about-game-program-architecture/</loc>
-<lastmod>2025-04-09T00:00:00+09:00</lastmod>
+<loc>http://localhost:4000/magazine/zzz-change-system/</loc>
+<lastmod>2025-07-19T00:00:00+09:00</lastmod>
+</url>
+<url>
+<loc>http://localhost:4000/magazine/docker-airflow-uid-problem/</loc>
+<lastmod>2025-09-03T00:00:00+09:00</lastmod>
+</url>
+<url>
+<loc>http://localhost:4000/magazine/remote-ssh-problem/</loc>
+<lastmod>2025-09-04T00:00:00+09:00</lastmod>
 </url>
 <url>
 <loc>http://localhost:4000/magazine/404/</loc>

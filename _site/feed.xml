@@ -1,105 +1,135 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="http://localhost:4000/magazine/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/magazine/" rel="alternate" type="text/html" /><updated>2025-05-03T15:29:27+09:00</updated><id>http://localhost:4000/magazine/feed.xml</id><title type="html">Eyes can blaze like Meteors!🌠</title><subtitle>Mundana is a free Jekyll theme for awesome people like you, Medium like.</subtitle><entry><title type="html">게임 분석</title><link href="http://localhost:4000/magazine/about-game-program-architecture/" rel="alternate" type="text/html" title="게임 분석" /><published>2025-04-09T00:00:00+09:00</published><updated>2025-04-09T00:00:00+09:00</updated><id>http://localhost:4000/magazine/about-game-program-architecture</id><content type="html" xml:base="http://localhost:4000/magazine/about-game-program-architecture/"><![CDATA[<h1 id="핵심-게임-시스템-구조">핵심 게임 시스템 구조</h1>
-<p><img src="../assets/images/19.jpg" alt="system1" />
-<br /></p>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="http://localhost:4000/magazine/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/magazine/" rel="alternate" type="text/html" /><updated>2025-09-08T02:10:41+09:00</updated><id>http://localhost:4000/magazine/feed.xml</id><title type="html">Eyes can blaze like Meteors!🌠</title><subtitle>Mundana is a free Jekyll theme for awesome people like you, Medium like.</subtitle><entry><title type="html">VSCode Remote SSH 접속 실패 문제 해결</title><link href="http://localhost:4000/magazine/remote-ssh-problem/" rel="alternate" type="text/html" title="VSCode Remote SSH 접속 실패 문제 해결" /><published>2025-09-04T00:00:00+09:00</published><updated>2025-09-04T00:00:00+09:00</updated><id>http://localhost:4000/magazine/remote-ssh-problem</id><content type="html" xml:base="http://localhost:4000/magazine/remote-ssh-problem/"><![CDATA[<h2 id="문제-상황-어떤-오류이슈였는지">문제 상황 (어떤 오류/이슈였는지)</h2>
+<p>회사에서 사용하는 AWS EC2 .pem 키를 받아 ~/.ssh/config에 필요한 설정을 해주었음에도 불구하고 계속 키 권한 문제 에러로 인한 Connection fail 발생.</p>
 
-<h3 id="1-코어-루프">1. 코어 루프</h3>
+<h2 id="원인-분석">원인 분석</h2>
+<p><code class="language-plaintext highlighter-rouge">chmod 600 (파일명)</code>을 해줬고, 네트워크 설정상의 접근 권한 문제(인바운드/아웃바운드 등)가 없는데도 같은 문제가 발생한다는 건 다른 게 원인이라는 것. 그래서 접속 실패하기까지의 로그 전체를 분석</p>
+
+<h2 id="해결">해결</h2>
+<p>IdentityFile에 적힌 pem키 파일 경로명을 상대 경로가 아닌 절대 경로로 정확하게 명시했더니 해결됐다.</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Host airflow-ec2
+  HostName (IP주소)
+  User ubuntu
+  IdentityFile (pem키 파일 경로)
+</code></pre></div></div>
+
+<h2 id="주의할-점--대체-방법">주의할 점 / 대체 방법</h2>
 <ul>
-  <li><strong>핵심 사이클</strong>: 턴제 전투 → 메인 퀘스트 클리어 → 다음 퀘스트 진행</li>
-  <li><strong>구조</strong>: 챕터 단위 진행 (각 챕터당 3~10개 메인 퀘스트)</li>
-  <li><strong>진행 방식</strong>: 스토리 진행에 따라 요구되는 전투력이 지속적으로 상승
-여기서 영웅은 모든 전투의 핵심 주체로, 지속적인 성장이 필수적입니다.
-<br /><br /><br /></li>
+  <li>파일/폴더 경로가 문제되는 다른 경우들에도 저런 식의 방법이 통할 때가 있었다.</li>
 </ul>
 
-<h3 id="2-전투력-성장-시스템">2. 전투력 성장 시스템</h3>
-<h4 id="1-장비-시스템">1) 장비 시스템</h4>
+<h2 id="참고-자료-링크-문서-등">참고 자료 (링크, 문서 등)</h2>
+<p>ChatGPT5.0</p>]]></content><author><name>jane</name></author><category term="ssh" /><category term="docker" /><summary type="html"><![CDATA[문제 상황 (어떤 오류/이슈였는지) 회사에서 사용하는 AWS EC2 .pem 키를 받아 ~/.ssh/config에 필요한 설정을 해주었음에도 불구하고 계속 키 권한 문제 에러로 인한 Connection fail 발생.]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="http://localhost:4000/magazine/assets/images/2.jpg" /><media:content medium="image" url="http://localhost:4000/magazine/assets/images/2.jpg" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">airflow UID가 생성?되지 않는 문제</title><link href="http://localhost:4000/magazine/docker-airflow-uid-problem/" rel="alternate" type="text/html" title="airflow UID가 생성?되지 않는 문제" /><published>2025-09-03T00:00:00+09:00</published><updated>2025-09-03T00:00:00+09:00</updated><id>http://localhost:4000/magazine/docker-airflow-uid-problem</id><content type="html" xml:base="http://localhost:4000/magazine/docker-airflow-uid-problem/"><![CDATA[<h2 id="문제-상황-어떤-오류이슈였는지">문제 상황 (어떤 오류/이슈였는지)</h2>
+<p>docker compose 파일에 <code class="language-plaintext highlighter-rouge">user: "${AIRFLOW_UID:-50000}:0"</code> 라는 부분이 포함돼있음. 그럼에도 불구하고 AIRFLOW_UID가 생성되지 않아 <code class="language-plaintext highlighter-rouge">WARNING</code>이 뜨고, 실제 airflow-init 컨테이너를 비롯하여 여러 컨테이너를 띄울 때 에러를 보이며 airflow 구동에 실패함.</p>
+
+<h2 id="원인-분석">원인 분석</h2>
+
+<h2 id="해결-방법-코드명령어-포함">해결 방법 (코드/명령어 포함)</h2>
+<p>프로젝트 루트(Compose 파일이 있는 폴더)에 .env 파일을 만들어 항상 로드되게 한다.</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>echo "AIRFLOW_UID=$(id -u)" &gt; .env
+</code></pre></div></div>
+
+<h2 id="주의할-점--대체-방법">주의할 점 / 대체 방법</h2>
 <ul>
-  <li><strong>효과</strong>: 장착만으로 즉시 전투력 상승</li>
-  <li><strong>종류</strong>: 반지, 팔찌, 목걸이, 벨트, 귀걸이, 룬</li>
-  <li><strong>획득처</strong>: 게임 내 다양한 컨텐츠 보상</li>
+  <li>신기한 건, 실행 환경에 따라 AIRFLOW_UID가 항상 달랐다는 것.</li>
+  <li>.env는 자동으로 읽히므로, 쉘에서 export 안 해도 됨</li>
 </ul>
 
-<h4 id="2-강화-시스템">2) 강화 시스템</h4>
+<h2 id="참고-자료-링크-문서-등">참고 자료 (링크, 문서 등)</h2>
+<p>ChatGPT5.0</p>]]></content><author><name>jane</name></author><category term="airflow" /><category term="docker" /><summary type="html"><![CDATA[문제 상황 (어떤 오류/이슈였는지) docker compose 파일에 user: "${AIRFLOW_UID:-50000}:0" 라는 부분이 포함돼있음. 그럼에도 불구하고 AIRFLOW_UID가 생성되지 않아 WARNING이 뜨고, 실제 airflow-init 컨테이너를 비롯하여 여러 컨테이너를 띄울 때 에러를 보이며 airflow 구동에 실패함.]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="http://localhost:4000/magazine/assets/images/1.jpg" /><media:content medium="image" url="http://localhost:4000/magazine/assets/images/1.jpg" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">젠레스 존 제로: 캐릭터 간 교대를 중심으로 한 전투 흐름은 어떤 플레이어 경험을 유도하는가?</title><link href="http://localhost:4000/magazine/zzz-change-system/" rel="alternate" type="text/html" title="젠레스 존 제로: 캐릭터 간 교대를 중심으로 한 전투 흐름은 어떤 플레이어 경험을 유도하는가?" /><published>2025-07-19T00:00:00+09:00</published><updated>2025-07-19T00:00:00+09:00</updated><id>http://localhost:4000/magazine/zzz-change-system</id><content type="html" xml:base="http://localhost:4000/magazine/zzz-change-system/"><![CDATA[<h1 id="-전투에서-캐릭터-교대-시스템이-만들어내는-플레이어-경험과-대중성"><젠레스 존="" 제로=""> 전투에서 캐릭터 교대 시스템이 만들어내는 플레이어 경험과 대중성</젠레스></h1>
+
+<h2 id="1-주제-선정-이유">1. 주제 선정 이유</h2>
+
+<p>Zenless Zone Zero(이하 ZZZ)는 캐릭터 4인을 팀으로 운용하며, 이들 간의 교대 타이밍이 곧 전투 리듬, 스피드, 핵심 재미 및 매커니즘을 담당하는 요소다. 이는 같은 장르(ARPG)의 다른 게임들과 비교하여 젠존제만의 독특한 개성을 만들어 낸다. 그러므로 이 시스템이 유도하는 플레이어 경험을 분석하여 젠존제가 어떻게 높은 인기를 구가할 수 있었는지 살펴본다. =&gt; 인기 말고 대중성이라고 바꾸고, 내가 여기서 말한 대중성이 무슨 의미이며 어떤 의미인지 말하고, 결론을 쓴다.
+<br /><br /></p>
+
+<h2 id="2-핵심-시스템구조-설명">2. 핵심 시스템/구조 설명</h2>
+
+<h3 id="21-지원교대-개요">2.1 지원(교대) 개요</h3>
 <ul>
-  <li><strong>효과</strong>: 영웅 레벨 상승</li>
-  <li><strong>필요 재료</strong>: 영웅 강화 물약, 게임 머니</li>
-  <li><strong>특별 컨텐츠</strong>: 솔가레스 요새 전투 (영웅 강화 물약 전용 획득처)</li>
+  <li><strong>지원</strong>은 전투 중 아군 캐릭터를 즉시 교체하는 기술이며, ZZZ 전투의 핵심 메커니즘이다.</li>
+  <li>지원에는 크게 <strong>빠른 지원</strong>과 <strong>극한 지원</strong> 두 가지 형태가 있다.</li>
 </ul>
 
-<h4 id="3-각성-시스템">3) 각성 시스템</h4>
-<ul>
-  <li><strong>효과</strong>: 기본 전투력 수치 상승</li>
-  <li><strong>필요 재료</strong>: 풀 각성 증표, 각성의 정수, 각성의 근원</li>
-  <li><strong>특징</strong>: 레벨과 별개로 작동하는 고정 스탯 상승</li>
-</ul>
-
-<h4 id="4-진화-시스템">4) 진화 시스템</h4>
-<ul>
-  <li><strong>효과</strong>: 최대 레벨 한계 상승</li>
-  <li><strong>필요 재료</strong>:
+<h3 id="22-빠른-지원">2.2 빠른 지원</h3>
+<ol>
+  <li><strong>발동 조건</strong>
     <ul>
-      <li>진화의 목걸이</li>
-      <li>마법서 (솔가레스 요새 전투에서 획득)</li>
-      <li>보스 재료: 마수 하우렉스의 귀, 회색 마신의 날개, 붉은 마신의 뿔</li>
+      <li>출전 중인 캐릭터가 강력한 공격을 받아 <strong>넉백/강한 넉백/넉업</strong> 상태에 진입(피격 스턴)했을 때</li>
+      <li>피격 스턴이 발생한 직후 짧은 타이밍 안에 “ZZZ-아이콘-지원…” 탭 입력</li>
     </ul>
   </li>
-  <li><strong>연계 시스템</strong>: 섬멸전</li>
-</ul>
+  <li><strong>효과</strong>
+    <ul>
+      <li>즉시 다음 캐릭터로 교체하여, 피격 스턴 중에도 빠르게 공세를 이어갈 수 있음</li>
+      <li>전투의 흐름을 끊기지 않게 유지하며, ZZZ 특유의 속도감과 리듬을 강조</li>
+    </ul>
+  </li>
+  <li><strong>확장 요소</strong>
+    <ul>
+      <li>일부 지원 에이전트 스킬로도 빠른 지원을 촉발할 수 있어, 피격 중이 아니어도 동일한 교대 효과 발동 가능</li>
+    </ul>
+  </li>
+</ol>
 
-<h4 id="5-음식-섭취-시스템">5) 음식 섭취 시스템</h4>
+<h3 id="23-극한-지원">2.3 극한 지원</h3>
+<ol>
+  <li><strong>발동 조건</strong>
+    <ul>
+      <li>적이 <strong>특정 강력 기술</strong>을 시전할 때 화면에 금빛 알림이 뜰 때</li>
+      <li>이 알림이 뜬 직후 “ZZZ-아이콘-지원…” 탭 입력</li>
+      <li>지원 포인트가 충분하고, 대기 중인 캐릭터가 해당 극한 지원 조건(패링 또는 회피)을 충족할 것</li>
+    </ul>
+  </li>
+  <li><strong>지원 포인트</strong>
+    <ul>
+      <li>발동 시 <strong>공격 강도</strong>와 <strong>캐릭터 성능</strong>에 비례한 포인트 소모</li>
+      <li>콤보 스킬 또는 궁극기 시전 시 <strong>1pt 회복</strong></li>
+    </ul>
+  </li>
+  <li><strong>발동 효과 및 유형</strong>
+    <ul>
+      <li>발동 직후 “ZZZ-아이콘-일반…” 탭 시 추가로 <strong>지원 돌격</strong> 실행 가능</li>
+      <li><strong>극한 지원</strong> 시 잠깐 화면이 흑백으로 변하며, 이때 돌격은 사용할 수 없음</li>
+      <li><strong>패링 지원</strong>
+        <ul>
+          <li>적 공격을 패링하여 대량의 그로기 수치 누적</li>
+          <li>공격 대부분의 경직 유발</li>
+        </ul>
+      </li>
+      <li><strong>회피 지원</strong>
+        <ul>
+          <li>적 공격을 회피하며 <strong>극한 시야</strong> 발동</li>
+          <li>해당 시야 내 적 행동 속도 대폭 감소</li>
+          <li>교대 캐릭터 무적 상태 유지</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li><strong>제한 조건</strong>
+    <ul>
+      <li>지원 포인트 부족 혹은 대기 캐릭터가 조건 미충족 시 발동 불가(금빛 알림이 붉은 빛으로 변경)</li>
+      <li>붉은 빛 알림 시 탭 입력하면 다음 캐릭터로 교체되고, <strong>극한 회피</strong>만 발동</li>
+    </ul>
+  </li>
+</ol>
+
+<h3 id="24-우수한-패링-능력">2.4 우수한 패링 능력</h3>
 <ul>
-  <li><strong>효과</strong>:
-    <ul>
-      <li>전투 중 일시적 버프 (전투력 보완)</li>
-      <li>보상 증가 효과</li>
-    </ul>
-  </li>
-  <li><strong>제한</strong>: 전투당 1개 음식만 사용 가능</li>
-  <li><strong>특징</strong>: 캐릭터별로 효과가 있는 음식이 정해져 있음</li>
-  <li><strong>획득처</strong>:
-    <ul>
-      <li>마을 상점 (요리 재료)</li>
-      <li>주점 (요리 제작 또는 완성품 구매)
-<br /><br /><br /></li>
-    </ul>
-  </li>
+  <li>특정 캐릭터가 보유한 고유 능력으로, <strong>고강도 공격 패링 시 지원 포인트 소모량을 절반으로 감소</strong></li>
+  <li>일반적으로 2pt 소모되는 상황에서 1pt만 소모하여 보다 자주 극한 지원을 사용할 수 있음</li>
 </ul>
 
-<h3 id="3-관련-컨텐츠-시스템">3. 관련 컨텐츠 시스템</h3>
-<h4 id="1-보스전--섬멸전-시스템">1) 보스전 → 섬멸전 시스템</h4>
+<h2 id="3-유저-경험-효과">3. 유저 경험 효과</h2>
+<h3 id="1-타-게임-대비-좀더-다채로운-전투-행동-사이클-설계">1) 타 게임 대비 좀더 다채로운 전투 행동 사이클 설계</h3>
+<h3 id="2-스피디하고-화려한-전투">2) 스피디하고 화려한 전투</h3>
+<h3 id="3-독특한-패링-연출-및-스킬-패링-중심의-전투-유도">3) 독특한 패링 연출 및 스킬, 패링 중심의 전투 유도</h3>
+<h3 id="4-초반-기준-전투-난도-진입-장벽을-낮추는-요소">4) (초반 기준) 전투 난도, 진입 장벽을 낮추는 요소</h3>
 <ul>
-  <li><strong>보스전</strong>:
-    <ul>
-      <li>섬멸전 발생 확률을 상승시키는 전투</li>
-      <li>누적 확률이 100%에 도달하면 섬멸전 발생</li>
-    </ul>
-  </li>
-  <li><strong>섬멸전</strong>:
-    <ul>
-      <li>5종류의 보스가 등장하는 대규모 전투</li>
-      <li>각 보스는 고정된 출몰 장소 존재</li>
-      <li>진화 재료 획득의 주요 경로</li>
-    </ul>
-  </li>
-  <li><strong>우호도 시스템</strong>:
-    <ul>
-      <li>섬멸전 발생 장소의 NPC 서브 퀘스트 완료로 우호도 상승</li>
-      <li>높은 우호도 = 해당 지역 섬멸전 발생 확률 증가</li>
-      <li>보스전 횟수를 줄여 효율적인 진행 가능</li>
-    </ul>
-  </li>
+  <li>덕분에 액션 게임 초보라도 액션 장르를 즐기기 좋은 요소가 됨</li>
+  <li>패링·회피 조건을 잘 맞출수록 더 적은 포인트로 극한 지원 사용 가능 → 액션 게임 숙련도가 높은 유저에게 좋은 요소</li>
 </ul>
 
-<h4 id="2-재화-시스템">2) 재화 시스템</h4>
-<ul>
-  <li><strong>게임 머니</strong>: 모든 성장 시스템의 기본 재화</li>
-  <li><strong>아이템/재료</strong>: 각 성장 시스템별 고유 재료</li>
-  <li><strong>획득처</strong>: 게임 내 모든 컨텐츠에서 다양하게 획득 가능
-<br /><br /><br /></li>
-</ul>
-
-<p>이와 같은 시스템이 연결되어 《일곱 개의 대죄: GRAND CROSS》의 게임플레이 경험을 구성합니다.
-<br /><br /><br /><br /><br /></p>]]></content><author><name>jane</name></author><category term="턴제" /><category term="RPG" /><category term="게임 분석" /><summary type="html"><![CDATA[핵심 게임 시스템 구조]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="http://localhost:4000/magazine/assets/images/18.jpg" /><media:content medium="image" url="http://localhost:4000/magazine/assets/images/18.jpg" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">Welcome to Jekyll!</title><link href="http://localhost:4000/magazine/welcome-to-jekyll/" rel="alternate" type="text/html" title="Welcome to Jekyll!" /><published>2019-02-04T00:00:00+09:00</published><updated>2019-02-04T00:00:00+09:00</updated><id>http://localhost:4000/magazine/welcome-to-jekyll</id><content type="html" xml:base="http://localhost:4000/magazine/welcome-to-jekyll/"><![CDATA[<p>You’ll find this post in your <code class="language-plaintext highlighter-rouge">_posts</code> directory. Go ahead and edit it and re-build the site to see your changes. You can rebuild the site in many different ways, but the most common way is to run <code class="language-plaintext highlighter-rouge">jekyll serve</code>, which launches a web server and auto-regenerates your site when a file is updated.</p>
+<h2 id="4-결론">4. 결론</h2>]]></content><author><name>jane</name></author><category term="Action" /><category term="System Analysis" /><category term="featured" /><summary type="html"><![CDATA[전투에서 캐릭터 교대 시스템이 만들어내는 플레이어 경험과 대중성]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="http://localhost:4000/magazine/assets/images/6.jpg" /><media:content medium="image" url="http://localhost:4000/magazine/assets/images/6.jpg" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">Welcome to Jekyll!</title><link href="http://localhost:4000/magazine/welcome-to-jekyll/" rel="alternate" type="text/html" title="Welcome to Jekyll!" /><published>2019-02-04T00:00:00+09:00</published><updated>2019-02-04T00:00:00+09:00</updated><id>http://localhost:4000/magazine/welcome-to-jekyll</id><content type="html" xml:base="http://localhost:4000/magazine/welcome-to-jekyll/"><![CDATA[<p>You’ll find this post in your <code class="language-plaintext highlighter-rouge">_posts</code> directory. Go ahead and edit it and re-build the site to see your changes. You can rebuild the site in many different ways, but the most common way is to run <code class="language-plaintext highlighter-rouge">jekyll serve</code>, which launches a web server and auto-regenerates your site when a file is updated.</p>
 
 <p>To add new posts, simply add a file in the <code class="language-plaintext highlighter-rouge">_posts</code> directory that follows the convention <code class="language-plaintext highlighter-rouge">YYYY-MM-DD-name-of-post.ext</code> and includes the necessary front matter. Take a look at the source for this post to get an idea about how it works.</p>
 
@@ -229,24 +259,4 @@
 
 <p>For more information about how to use <code class="language-plaintext highlighter-rouge">Bundler</code> in your Jekyll project, this tutorial should provide answers to the most common questions and explain how to get up and running quickly.</p>]]></content><author><name>sal</name></author><category term="Jekyll" /><summary type="html"><![CDATA[gem install bundler installs the bundler gem through RubyGems. You only need to install it once - not every time you create a new Jekyll project. Here are some additional details:]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="http://localhost:4000/magazine/assets/images/2.jpg" /><media:content medium="image" url="http://localhost:4000/magazine/assets/images/2.jpg" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">We all wait for summer</title><link href="http://localhost:4000/magazine/we-all-wait-for-summer/" rel="alternate" type="text/html" title="We all wait for summer" /><published>2019-01-28T00:00:00+09:00</published><updated>2019-01-28T00:00:00+09:00</updated><id>http://localhost:4000/magazine/we-all-wait-for-summer</id><content type="html" xml:base="http://localhost:4000/magazine/we-all-wait-for-summer/"><![CDATA[<p>This is changed. As I engage in the so-called “bull sessions” around and about the school, I too often find that most college men have a misconception of the purpose of education. Most of the “brethren” think that <a href="#">education should equip</a> them with the proper instruments of exploitation so that they can forever trample over the masses. Still others think that education should furnish them with noble ends rather than means to an end.</p>
 
-<p>It seems to me that education has a two-fold function to perform in the life of man and in society: the one is utility and the other is culture. Education must enable a man to become more efficient, to achieve with increasing facility the ligitimate goals of his life.</p>]]></content><author><name>jane</name></author><category term="Jekyll" /><category term="tutorial" /><category term="featured" /><summary type="html"><![CDATA[This is changed. As I engage in the so-called “bull sessions” around and about the school, I too often find that most college men have a misconception of the purpose of education. Most of the “brethren” think that education should equip them with the proper instruments of exploitation so that they can forever trample over the masses. Still others think that education should furnish them with noble ends rather than means to an end.]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="http://localhost:4000/magazine/assets/images/1.jpg" /><media:content medium="image" url="http://localhost:4000/magazine/assets/images/1.jpg" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">Tree of Codes</title><link href="http://localhost:4000/magazine/tree-of-codes/" rel="alternate" type="text/html" title="Tree of Codes" /><published>2019-01-27T00:00:00+09:00</published><updated>2019-01-27T00:00:00+09:00</updated><id>http://localhost:4000/magazine/tree-of-codes</id><content type="html" xml:base="http://localhost:4000/magazine/tree-of-codes/"><![CDATA[<p>The first mass-produced book to deviate from a rectilinear format, at least in the United States, is thought to be this 1863 edition of Red Riding Hood, cut into the shape of the protagonist herself with the troublesome wolf curled at her feet. Produced by the Boston-based publisher Louis Prang, this is the first in their “Doll Series”, a set of five “die-cut” books, known also as shape books — the other titles being Robinson Crusoe, Goody Two-Shoes (also written by Red Riding Hood author Lydia Very), Cinderella, and King Winter.</p>
-
-<p>As for this particular rendition of Charles Perrault’s classic tale, the text and design is by Lydia Very (1823-1901), sister of Transcendentalist poet Jones Very. The gruesome ending of the original — which sees Little Red Riding Hood being gobbled up as well as her grandmother — is avoided here, the gore giving way to the less bloody aims of the morality tale, and the lesson that one should not disobey one’s mother.</p>
-
-<blockquote>
-  <p>It would seem the claim could also extend to die cut books in general, as we can’t find anything sooner, but do let us know in the comments if you have further light to shed on this! Such books are, of course, still popular in children’s publishing today, though the die cutting is not now limited to mere outlines, as evidenced in a beautiful 2014 version of the same Little Red Riding Hood story.</p>
-</blockquote>
-
-<p>An 1868 Prang catalogue would later claim that such “books in the shape of a regular paper Doll… originated with us”.</p>
-
-<p>The die cut has also been employed in the non-juvenile sphere as well, a recent example being Jonathan Safran Foer’s ambitious Tree of Codes.</p>]]></content><author><name>sal</name></author><category term="Jekyll" /><category term="tutorial" /><summary type="html"><![CDATA[The first mass-produced book to deviate from a rectilinear format, at least in the United States, is thought to be this 1863 edition of Red Riding Hood, cut into the shape of the protagonist herself with the troublesome wolf curled at her feet. Produced by the Boston-based publisher Louis Prang, this is the first in their “Doll Series”, a set of five “die-cut” books, known also as shape books — the other titles being Robinson Crusoe, Goody Two-Shoes (also written by Red Riding Hood author Lydia Very), Cinderella, and King Winter.]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="http://localhost:4000/magazine/assets/images/2.jpg" /><media:content medium="image" url="http://localhost:4000/magazine/assets/images/2.jpg" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">Red Riding Hood</title><link href="http://localhost:4000/magazine/red-riding/" rel="alternate" type="text/html" title="Red Riding Hood" /><published>2019-01-26T00:00:00+09:00</published><updated>2019-01-26T00:00:00+09:00</updated><id>http://localhost:4000/magazine/red-riding</id><content type="html" xml:base="http://localhost:4000/magazine/red-riding/"><![CDATA[<p>The first mass-produced book to deviate from a rectilinear format, at least in the United States, is thought to be this 1863 edition of Red Riding Hood, cut into the shape of the protagonist herself with the troublesome wolf curled at her feet. Produced by the Boston-based publisher Louis Prang, this is the first in their “Doll Series”, a set of five “die-cut” books, known also as shape books — the other titles being Robinson Crusoe, Goody Two-Shoes (also written by Red Riding Hood author Lydia Very), Cinderella, and King Winter.</p>
-
-<p>An 1868 Prang catalogue would later claim that such “books in the shape of a regular paper Doll… originated with us”.</p>
-
-<blockquote>
-  <p>It would seem the claim could also extend to die cut books in general, as we can’t find anything sooner, but do let us know in the comments if you have further light to shed on this! Such books are, of course, still popular in children’s publishing today, though the die cutting is not now limited to mere outlines, as evidenced in a beautiful 2014 version of the same Little Red Riding Hood story.</p>
-</blockquote>
-
-<p>The die cut has also been employed in the non-juvenile sphere as well, a recent example being Jonathan Safran Foer’s ambitious Tree of Codes.</p>
-
-<p>As for this particular rendition of Charles Perrault’s classic tale, the text and design is by Lydia Very (1823-1901), sister of Transcendentalist poet Jones Very. The gruesome ending of the original — which sees Little Red Riding Hood being gobbled up as well as her grandmother — is avoided here, the gore giving way to the less bloody aims of the morality tale, and the lesson that one should not disobey one’s mother.</p>]]></content><author><name>sal</name></author><category term="Jekyll" /><category term="tutorial" /><summary type="html"><![CDATA[The first mass-produced book to deviate from a rectilinear format, at least in the United States, is thought to be this 1863 edition of Red Riding Hood, cut into the shape of the protagonist herself with the troublesome wolf curled at her feet. Produced by the Boston-based publisher Louis Prang, this is the first in their “Doll Series”, a set of five “die-cut” books, known also as shape books — the other titles being Robinson Crusoe, Goody Two-Shoes (also written by Red Riding Hood author Lydia Very), Cinderella, and King Winter.]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="http://localhost:4000/magazine/assets/images/3.jpg" /><media:content medium="image" url="http://localhost:4000/magazine/assets/images/3.jpg" xmlns:media="http://search.yahoo.com/mrss/" /></entry></feed>
+<p>It seems to me that education has a two-fold function to perform in the life of man and in society: the one is utility and the other is culture. Education must enable a man to become more efficient, to achieve with increasing facility the ligitimate goals of his life.</p>]]></content><author><name>jane</name></author><category term="Jekyll" /><category term="tutorial" /><category term="featured" /><summary type="html"><![CDATA[This is changed. As I engage in the so-called “bull sessions” around and about the school, I too often find that most college men have a misconception of the purpose of education. Most of the “brethren” think that education should equip them with the proper instruments of exploitation so that they can forever trample over the masses. Still others think that education should furnish them with noble ends rather than means to an end.]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="http://localhost:4000/magazine/assets/images/1.jpg" /><media:content medium="image" url="http://localhost:4000/magazine/assets/images/1.jpg" xmlns:media="http://search.yahoo.com/mrss/" /></entry></feed>
