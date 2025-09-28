@@ -1,10 +1,593 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="http://localhost:4000/magazine/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/magazine/" rel="alternate" type="text/html" /><updated>2025-09-08T02:10:41+09:00</updated><id>http://localhost:4000/magazine/feed.xml</id><title type="html">Eyes can blaze like Meteors!🌠</title><subtitle>Mundana is a free Jekyll theme for awesome people like you, Medium like.</subtitle><entry><title type="html">VSCode Remote SSH 접속 실패 문제 해결</title><link href="http://localhost:4000/magazine/remote-ssh-problem/" rel="alternate" type="text/html" title="VSCode Remote SSH 접속 실패 문제 해결" /><published>2025-09-04T00:00:00+09:00</published><updated>2025-09-04T00:00:00+09:00</updated><id>http://localhost:4000/magazine/remote-ssh-problem</id><content type="html" xml:base="http://localhost:4000/magazine/remote-ssh-problem/"><![CDATA[<h2 id="문제-상황-어떤-오류이슈였는지">문제 상황 (어떤 오류/이슈였는지)</h2>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="http://localhost:4000/magazine/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/magazine/" rel="alternate" type="text/html" /><updated>2025-09-29T02:56:04+09:00</updated><id>http://localhost:4000/magazine/feed.xml</id><title type="html">Eyes can blaze like Meteors!🌠</title><subtitle>Mundana is a free Jekyll theme for awesome people like you, Medium like.</subtitle><entry><title type="html">수습 과제: A사 3월~7월 데이터 adhoc 구축</title><link href="http://localhost:4000/magazine/adhoc-bigdata-loading/" rel="alternate" type="text/html" title="수습 과제: A사 3월~7월 데이터 adhoc 구축" /><published>2025-09-27T00:00:00+09:00</published><updated>2025-09-27T00:00:00+09:00</updated><id>http://localhost:4000/magazine/adhoc-bigdata-loading</id><content type="html" xml:base="http://localhost:4000/magazine/adhoc-bigdata-loading/"><![CDATA[<h1 id="1-프로젝트-개요">1. 프로젝트 개요</h1>
+
+<h2 id="11-프로젝트-목적">1.1 프로젝트 목적</h2>
+
+<ul>
+  <li><strong>목적</strong>: 운영 환경 DB에서 ?? 처리하기엔 데이터가 너무 많아 특정 기간의 데이터를 추출</li>
+  <li><strong>주요 Mission</strong>: 시간 효율 최우선. 운영 인덱스(timestamp, actor_id)와 파티셔닝 활용</li>
+  <li><strong>구현 전략</strong>: 월(파티션) 단위 → 키셋 페이지네이션 → COPY 스트리밍 → 타깃에 적재</li>
+  <li><strong>검증</strong>: EXPLAIN rows 추정치만 로그로 (가볍게)</li>
+  <li><strong>중복 제어</strong>: 기본 OFF(최대 속도). 필요 시 후처리 SQL 별도 실행.</li>
+</ul>
+
+<h2 id="12-수행-범위">1.2 수행 범위</h2>
+
+<h2 id="13-기술-스택-및-환경">1.3 기술 스택 및 환경</h2>
+
+<h1 id="2-sample-test-환경-구성-및-운영">2. Sample Test 환경 구성 및 운영</h1>
+
+<h3 id="21-source-db--stage-db--airflow-컨테이너-정의">2.1 Source DB / Stage DB / Airflow 컨테이너 정의</h3>
+
+<h3 id="-source-db-원천-db">🔹 Source DB (원천 DB)</h3>
+
+<ul>
+  <li><strong>구성</strong>: 회사 내부 PostgreSQL 16 서버 (외부에 별도 컨테이너 없음)</li>
+  <li><strong>접속방식</strong>: <code class="language-plaintext highlighter-rouge">SRC_PG_HOST</code>, <code class="language-plaintext highlighter-rouge">SRC_PG_PORT</code>, <code class="language-plaintext highlighter-rouge">SRC_PG_DB</code>, <code class="language-plaintext highlighter-rouge">SRC_PG_USER</code>, <code class="language-plaintext highlighter-rouge">SRC_PG_PASSWORD</code> 환경변수로 모든 서비스에 공통 주입</li>
+  <li><strong>Airflow Connection</strong>: <code class="language-plaintext highlighter-rouge">AIRFLOW_CONN_SRC_PG</code> URI를 통해 DAG 내 Operator들이 접근</li>
+</ul>
+
+<h3 id="-stage-db-적재-db-로컬-컨테이너">🔹 Stage DB (적재 DB, 로컬 컨테이너)</h3>
+
+<ul>
+  <li><strong>구성</strong>: <code class="language-plaintext highlighter-rouge">pg_stage</code> (Postgres 13 컨테이너)</li>
+  <li><strong>환경변수</strong>: <code class="language-plaintext highlighter-rouge">STG_PG_USER</code>, <code class="language-plaintext highlighter-rouge">STG_PG_PASSWORD</code>, <code class="language-plaintext highlighter-rouge">STG_PG_DB</code></li>
+  <li><strong>포트 매핑</strong>: 호스트 5434 → 컨테이너 5432</li>
+  <li><strong>데이터 저장소</strong>: <code class="language-plaintext highlighter-rouge">pg-stage-data</code> 볼륨 마운트</li>
+  <li><strong>헬스체크</strong>: <code class="language-plaintext highlighter-rouge">pg_isready</code> 기반 DB 연결 상태 점검</li>
+</ul>
+
+<h3 id="-airflow-구성-etl-오케스트레이션">🔹 Airflow 구성 (ETL 오케스트레이션)</h3>
+
+<ul>
+  <li><strong>공통 설정</strong>: <code class="language-plaintext highlighter-rouge">x-airflow-common</code> 앵커 정의로 Executor, Broker, Backend, Volumes 등 일괄 적용
+    <ul>
+      <li>Executor: <strong>CeleryExecutor</strong></li>
+      <li>Broker: <strong>Redis</strong></li>
+      <li>Result Backend: <strong>Postgres (airflow 메타DB)</strong></li>
+      <li>Volumes: <code class="language-plaintext highlighter-rouge">dags</code>, <code class="language-plaintext highlighter-rouge">logs</code>, <code class="language-plaintext highlighter-rouge">plugins</code>, <code class="language-plaintext highlighter-rouge">config</code> 공유</li>
+    </ul>
+  </li>
+  <li><strong>서비스별 컨테이너</strong>
+    <ul>
+      <li><code class="language-plaintext highlighter-rouge">airflow-webserver</code>: UI 제공 (포트 8080)</li>
+      <li><code class="language-plaintext highlighter-rouge">airflow-scheduler</code>: DAG 스케줄링</li>
+      <li><code class="language-plaintext highlighter-rouge">airflow-worker</code>: Celery 기반 작업 실행</li>
+      <li><code class="language-plaintext highlighter-rouge">airflow-triggerer</code>: 이벤트 기반 트리거 관리</li>
+      <li><code class="language-plaintext highlighter-rouge">airflow-init</code>: 초기 DB 마이그레이션 및 계정 생성</li>
+      <li><code class="language-plaintext highlighter-rouge">airflow-cli</code>: 디버깅용 CLI</li>
+      <li><code class="language-plaintext highlighter-rouge">flower</code>: Celery 모니터링 대시보드 (포트 5555)</li>
+    </ul>
+  </li>
+  <li><strong>의존성 관리</strong>:
+    <ul>
+      <li>모든 Airflow 서비스는 <code class="language-plaintext highlighter-rouge">postgres</code>, <code class="language-plaintext highlighter-rouge">redis</code>, <code class="language-plaintext highlighter-rouge">pg-remote-probe</code>, <code class="language-plaintext highlighter-rouge">pg_stage</code> 상태에 따라 기동</li>
+    </ul>
+  </li>
+</ul>
+
+<h1 id="3-bigdata-test용-db-관련-작업">3. BigData TEST용 DB 관련 작업</h1>
+
+<h2 id="31-postgresql-환경-구축-스키마-및-테이블-초기화">3.1 PostgreSQL 환경 구축 (스키마 및 테이블 초기화)</h2>
+
+<h3 id="311-db서버-실행-환경">3.1.1. DB서버 실행 환경</h3>
+
+<ul>
+  <li>직접 설치 (도커 컨테이너 사용 x)</li>
+  <li>서버 사양
+    <ul>
+      <li>Ubuntu 24.02, 4Core CPU, 8GB RAM, 500GB <strong>HDD</strong></li>
+    </ul>
+  </li>
+  <li>PostgreSQL 16  <strong><em>(Concern: 운영계 DB 버전은 13인 걸 고려하지 못함)</em></strong></li>
+</ul>
+
+<h3 id="312-db-인스턴스-설정-변경">3.1.2 DB 인스턴스 설정 변경</h3>
+
+<ul>
+  <li>data_directory 경로 변경(회사 파티션 서버임을 감안), 외부 접속 허용(listen_address), 사용자 계정 생성</li>
+</ul>
+
+<h3 id="313-스키마-구조-정의">3.1.3 스키마 구조 정의</h3>
+
+<ul>
+  <li>원천 DB 테이블</li>
+</ul>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">CREATE</span> <span class="k">TABLE</span> <span class="n">acid</span><span class="p">.</span><span class="n">lrs_statement_new</span> <span class="p">(</span>
+  <span class="nv">"timestamp"</span> <span class="n">timestamptz</span> <span class="k">NOT</span> <span class="k">NULL</span><span class="p">,</span>
+  <span class="n">full_statement</span> <span class="n">jsonb</span> <span class="k">NOT</span> <span class="k">NULL</span><span class="p">,</span>
+  <span class="n">actor_id</span> <span class="nb">bigint</span>
+<span class="p">)</span> <span class="k">PARTITION</span> <span class="k">BY</span> <span class="k">RANGE</span> <span class="p">(</span><span class="nv">"timestamp"</span><span class="p">);</span>
+
+<span class="k">CREATE</span> <span class="k">TABLE</span> <span class="n">acid</span><span class="p">.</span><span class="n">lrs_statement_2025_03</span>
+  <span class="k">PARTITION</span> <span class="k">OF</span> <span class="n">acid</span><span class="p">.</span><span class="n">lrs_statement_new</span>
+  <span class="k">FOR</span> <span class="k">VALUES</span> <span class="k">FROM</span> <span class="p">(</span><span class="s1">'2025-03-01'</span><span class="p">)</span> <span class="k">TO</span> <span class="p">(</span><span class="s1">'2025-04-01'</span><span class="p">);</span>
+
+<span class="p">...</span>
+
+<span class="k">CREATE</span> <span class="k">TABLE</span> <span class="n">acid</span><span class="p">.</span><span class="n">lrs_statement_2025_07</span>
+  <span class="k">PARTITION</span> <span class="k">OF</span> <span class="n">acid</span><span class="p">.</span><span class="n">lrs_statement_new</span>
+  <span class="k">FOR</span> <span class="k">VALUES</span> <span class="k">FROM</span> <span class="p">(</span><span class="s1">'2025-07-01'</span><span class="p">)</span> <span class="k">TO</span> <span class="p">(</span><span class="s1">'2025-08-01'</span><span class="p">);</span>
+</code></pre></div></div>
+
+<ul>
+  <li>원천 DB 인덱스</li>
+</ul>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">-- 1) 자식 파티션 인덱스 생성 (CONCURRENTLY)</span>
+<span class="k">CREATE</span> <span class="k">INDEX</span> <span class="n">CONCURRENTLY</span> <span class="n">IF</span> <span class="k">NOT</span> <span class="k">EXISTS</span> <span class="n">lrs_statement_03_ts_actor_idx</span> <span class="k">ON</span> <span class="n">acid</span><span class="p">.</span><span class="n">lrs_statement_2025_03</span> <span class="p">(</span><span class="nv">"timestamp"</span><span class="p">,</span> <span class="n">actor_id</span><span class="p">);</span>
+<span class="k">CREATE</span> <span class="k">INDEX</span> <span class="n">CONCURRENTLY</span> <span class="n">IF</span> <span class="k">NOT</span> <span class="k">EXISTS</span> <span class="n">lrs_statement_04_ts_actor_idx</span> <span class="k">ON</span> <span class="n">acid</span><span class="p">.</span><span class="n">lrs_statement_2025_04</span> <span class="p">(</span><span class="nv">"timestamp"</span><span class="p">,</span> <span class="n">actor_id</span><span class="p">);</span>
+<span class="k">CREATE</span> <span class="k">INDEX</span> <span class="n">CONCURRENTLY</span> <span class="n">IF</span> <span class="k">NOT</span> <span class="k">EXISTS</span> <span class="n">lrs_statement_05_ts_actor_idx</span> <span class="k">ON</span> <span class="n">acid</span><span class="p">.</span><span class="n">lrs_statement_2025_05</span> <span class="p">(</span><span class="nv">"timestamp"</span><span class="p">,</span> <span class="n">actor_id</span><span class="p">);</span>
+<span class="k">CREATE</span> <span class="k">INDEX</span> <span class="n">CONCURRENTLY</span> <span class="n">IF</span> <span class="k">NOT</span> <span class="k">EXISTS</span> <span class="n">lrs_statement_06_ts_actor_idx</span> <span class="k">ON</span> <span class="n">acid</span><span class="p">.</span><span class="n">lrs_statement_2025_06</span> <span class="p">(</span><span class="nv">"timestamp"</span><span class="p">,</span> <span class="n">actor_id</span><span class="p">);</span>
+<span class="k">CREATE</span> <span class="k">INDEX</span> <span class="n">CONCURRENTLY</span> <span class="n">IF</span> <span class="k">NOT</span> <span class="k">EXISTS</span> <span class="n">lrs_statement_07_ts_actor_idx</span> <span class="k">ON</span> <span class="n">acid</span><span class="p">.</span><span class="n">lrs_statement_2025_07</span> <span class="p">(</span><span class="nv">"timestamp"</span><span class="p">,</span> <span class="n">actor_id</span><span class="p">);</span>
+
+<span class="c1">-- 2) 부모에 파티션드 인덱스 생성(메타데이터; CONCURRENTLY 불가)</span>
+<span class="k">CREATE</span> <span class="k">INDEX</span> <span class="n">lrs_statement_ts_actor_idx</span>
+  <span class="k">ON</span> <span class="n">acid</span><span class="p">.</span><span class="n">lrs_statement_new</span> <span class="p">(</span><span class="nv">"timestamp"</span><span class="p">,</span> <span class="n">actor_id</span><span class="p">);</span>
+
+<span class="c1">-- 3) 자식 인덱스들을 부모 인덱스에 ATTACH</span>
+<span class="k">ALTER</span> <span class="k">INDEX</span> <span class="n">acid</span><span class="p">.</span><span class="n">lrs_statement_ts_actor_idx</span> <span class="n">ATTACH</span> <span class="k">PARTITION</span> <span class="n">lrs_statement_03_ts_actor_idx</span><span class="p">;</span>
+<span class="k">ALTER</span> <span class="k">INDEX</span> <span class="n">acid</span><span class="p">.</span><span class="n">lrs_statement_ts_actor_idx</span> <span class="n">ATTACH</span> <span class="k">PARTITION</span> <span class="n">lrs_statement_04_ts_actor_idx</span><span class="p">;</span>
+<span class="k">ALTER</span> <span class="k">INDEX</span> <span class="n">acid</span><span class="p">.</span><span class="n">lrs_statement_ts_actor_idx</span> <span class="n">ATTACH</span> <span class="k">PARTITION</span> <span class="n">lrs_statement_05_ts_actor_idx</span><span class="p">;</span>
+<span class="k">ALTER</span> <span class="k">INDEX</span> <span class="n">acid</span><span class="p">.</span><span class="n">lrs_statement_ts_actor_idx</span> <span class="n">ATTACH</span> <span class="k">PARTITION</span> <span class="n">lrs_statement_06_ts_actor_idx</span><span class="p">;</span>
+<span class="k">ALTER</span> <span class="k">INDEX</span> <span class="n">acid</span><span class="p">.</span><span class="n">lrs_statement_ts_actor_idx</span> <span class="n">ATTACH</span> <span class="k">PARTITION</span> <span class="n">lrs_statement_07_ts_actor_idx</span><span class="p">;</span>
+</code></pre></div></div>
+
+<ul>
+  <li>적재 DB</li>
+</ul>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">CREATE</span> <span class="k">SCHEMA</span> <span class="n">IF</span> <span class="k">NOT</span> <span class="k">EXISTS</span> <span class="n">pipeline</span><span class="p">;</span>
+
+<span class="k">CREATE</span> <span class="k">TABLE</span> <span class="n">IF</span> <span class="k">NOT</span> <span class="k">EXISTS</span> <span class="n">pipeline</span><span class="p">.</span><span class="n">aidt_raw</span> <span class="p">(</span>
+    <span class="n">id</span> <span class="n">UUID</span><span class="p">,</span>
+    <span class="n">user_id</span> <span class="nb">VARCHAR</span><span class="p">,</span>
+    <span class="n">object_type</span> <span class="nb">VARCHAR</span><span class="p">,</span>
+    <span class="nv">"statement"</span> <span class="n">JSONB</span><span class="p">,</span>
+    <span class="nv">"timestamp"</span> <span class="n">TIMESTAMPTZ</span><span class="p">,</span>
+    <span class="n">inserted_at</span> <span class="n">TIMESTAMPTZ</span> <span class="k">DEFAULT</span> <span class="k">CURRENT_TIMESTAMP</span><span class="p">,</span>
+    <span class="n">flag</span> <span class="nb">CHAR</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="k">DEFAULT</span> <span class="s1">'N'</span><span class="p">,</span>
+    <span class="n">partner_id</span> <span class="nb">TEXT</span>
+<span class="p">);</span>
+</code></pre></div></div>
+
+<ul>
+  <li>운영 환경과 동일하게 맞춘 부분 vs 실험 목적으로 바꾼 부분 (필요한 컬럼만 넣음)</li>
+</ul>
+
+<h2 id="32-샘플-원천-데이터-이전">3.2 샘플 원천 데이터 이전</h2>
+
+<ul>
+  <li>상황
+    <ul>
+      <li>acid.lrs_statement 테이블은 dump를 뜰 수 없는 상황 ⇒ pipeline.aidt_raw 안에 있</li>
+    </ul>
+  </li>
+  <li>해결
+    <ul>
+      <li>파일 생성 후 bulk update 보단 DB to DB 통신이 빠를 것 같다고 생각해 실행에 옮김</li>
+    </ul>
+  </li>
+</ul>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">-- 2-1) FDW 확장 설치</span>
+<span class="k">CREATE</span> <span class="n">EXTENSION</span> <span class="n">IF</span> <span class="k">NOT</span> <span class="k">EXISTS</span> <span class="n">postgres_fdw</span><span class="p">;</span>
+
+<span class="c1">-- 2-2) 소스 DB를 가리키는 서버 객체 생성 (도커 네트워크 호스트명 사용)</span>
+<span class="k">DROP</span> <span class="n">SERVER</span> <span class="n">IF</span> <span class="k">EXISTS</span> <span class="n">src_srv</span> <span class="k">CASCADE</span><span class="p">;</span>
+<span class="k">CREATE</span> <span class="n">SERVER</span> <span class="n">src_srv</span> <span class="k">FOREIGN</span> <span class="k">DATA</span> <span class="n">WRAPPER</span> <span class="n">postgres_fdw</span>
+<span class="k">OPTIONS</span> <span class="p">(</span><span class="k">host</span> <span class="s1">'pg_source'</span><span class="p">,</span> <span class="n">port</span> <span class="s1">'5432'</span><span class="p">,</span> <span class="n">dbname</span> <span class="s1">'srcdb'</span><span class="p">);</span>
+
+<span class="c1">-- 2-3) 인증 매핑 (소스 DB 계정/비번)</span>
+<span class="k">CREATE</span> <span class="k">USER</span> <span class="n">MAPPING</span> <span class="k">FOR</span> <span class="n">stguser</span> <span class="n">SERVER</span> <span class="n">src_srv</span>
+<span class="k">OPTIONS</span> <span class="p">(</span><span class="k">user</span> <span class="s1">'srcuser'</span><span class="p">,</span> <span class="n">password</span> <span class="s1">'srcpass'</span><span class="p">);</span>
+
+<span class="c1">-- 2-4) 외부 테이블 가져올 스키마 (분리 권장)</span>
+<span class="k">CREATE</span> <span class="k">SCHEMA</span> <span class="n">IF</span> <span class="k">NOT</span> <span class="k">EXISTS</span> <span class="n">src_fdw</span><span class="p">;</span>
+
+<span class="c1">-- 2-5) 필요한 테이블만 임포트 (여기서 source_schema/source_table을 정확히 지정)</span>
+<span class="n">IMPORT</span> <span class="k">FOREIGN</span> <span class="k">SCHEMA</span> <span class="n">source_schema</span>
+  <span class="k">LIMIT</span> <span class="k">TO</span> <span class="p">(</span><span class="n">source_table</span><span class="p">)</span>
+  <span class="k">FROM</span> <span class="n">SERVER</span> <span class="n">src_srv</span>
+  <span class="k">INTO</span> <span class="n">src_fdw</span><span class="p">;</span>
+</code></pre></div></div>
+
+<h2 id="33-균일-분포-샘플-데이터-제작">3.3 균일 분포 샘플 데이터 제작</h2>
+
+<h3 id="331-배경">3.3.1 배경</h3>
+
+<ul>
+  <li>원본 <code class="language-plaintext highlighter-rouge">lrs_statement.insert.sql</code>에는 <code class="language-plaintext highlighter-rouge">actor.account.name</code>이 특정 값(<code class="language-plaintext highlighter-rouge">00066347-5ed0-5305-b2c4-82f28cd72560</code>)에 과도하게 치중.</li>
+  <li>동일한 이름은 동일한 <code class="language-plaintext highlighter-rouge">actor_id</code>를 갖기 때문에, 결과적으로 <code class="language-plaintext highlighter-rouge">actor_id</code> 값도 편향 → 인덱스 <code class="language-plaintext highlighter-rouge">(actor_id, timestamp)</code> 효율 저하.</li>
+</ul>
+
+<h3 id="332-목표">3.3.2 목표</h3>
+
+<ul>
+  <li>100가지 서로 다른 <code class="language-plaintext highlighter-rouge">actor.account.name</code>을 생성.</li>
+  <li>각 이름이 균등한 레코드 수를 갖도록 분배.</li>
+  <li>동일한 이름은 동일한 <code class="language-plaintext highlighter-rouge">actor_id</code>(1~100 사이 정수)를 가지도록 매핑.</li>
+  <li><code class="language-plaintext highlighter-rouge">timestamp</code> 및 다른 필드 값은 그대로 유지.</li>
+</ul>
+
+<h3 id="333-절차">3.3.3 절차</h3>
+
+<ol>
+  <li>원본 SQL 파일에서 <code class="language-plaintext highlighter-rouge">INSERT</code> 구문을 모두 파싱.</li>
+  <li>행 인덱스 기준으로 <strong><code class="language-plaintext highlighter-rouge">idx % 100</code></strong> 방식으로 100개의 버킷에 균등 분배.</li>
+  <li>각 버킷에 대해:
+    <ul>
+      <li><code class="language-plaintext highlighter-rouge">actor.account.name</code>을 UUIDv4 형식으로 새로 부여.</li>
+      <li><code class="language-plaintext highlighter-rouge">actor_id</code>는 1~100까지의 정수를 대응시킴.</li>
+    </ul>
+  </li>
+  <li>JSON 내부에서는 <code class="language-plaintext highlighter-rouge">actor.account.name</code>만 교체, 나머지 구조는 유지.</li>
+  <li>최종적으로 수정된 <code class="language-plaintext highlighter-rouge">INSERT</code> 구문들을 새로운 <code class="language-plaintext highlighter-rouge">.sql</code> 파일로 출력.</li>
+</ol>
+
+<h3 id="334-결과">3.3.4 결과</h3>
+
+<ul>
+  <li>100개의 이름이 균등하게 분포된 샘플 데이터 생성.</li>
+  <li>인덱스 <code class="language-plaintext highlighter-rouge">(actor_id, timestamp)</code>의 분포 다양성이 확보됨.</li>
+  <li>이후 동일 데이터를 timestamp만 변경하여 대용량 데이터셋 생성 가능.</li>
+  <li>
+    <p>개발한 DAG task 모두 성공</p>
+
+    <p><img src="http://localhost:4000/magazine/assets/images/20.jpg" alt="20.jpg" /></p>
+  </li>
+</ul>
+
+<h2 id="34-대용량-샘플-데이터8천만-건-생성-및-적재">3.4 대용량 샘플 데이터(8천만 건) 생성 및 적재</h2>
+
+<h3 id="341-배경">3.4.1 배경</h3>
+
+<ul>
+  <li>AI DT 파이프라인의 3~7월 데이터 예상 최대 산정량 = 3억 건
+⇒ 시간, 서버 자원 허용 수준에서 최대한 유사한 조건을 재현</li>
+</ul>
+
+<h3 id="342-방법-설계">3.4.2 방법 설계</h3>
+
+<ul>
+  <li>판단
+    <ul>
+      <li>모든 값을 다 새롭게 생성하는 것은 비효율적 ⇒ DB 안의 기존 레코드 내 timestamp만 변경하는 동시 복제하여 샘플을 뻥튀기</li>
+    </ul>
+  </li>
+  <li>결론</li>
+</ul>
+
+<p>굳이 파일을 쓰는 <strong>COPY로 돌아가지 말고 <code class="language-plaintext highlighter-rouge">INSERT … SELECT</code>(또는 CTAS→ATTACH)로 직접 자식 파티션에 적재</strong>하는 게 더 빠르고 간단합니다. 왜냐면,</p>
+
+<ul>
+  <li>COPY를 쓰려면 DB→파일(write)→DB(read)로 왕복 IO가 추가됩니다(특히 HDD면 더 손해)
+    <ul>
+      <li><strong>원천도, 목표도 같은 DB</strong> → 파일 왕복이 순수 오버헤드</li>
+      <li>파일 5개 만들고 반복 COPY도 가능하나, <strong>HDD에서 파일 IO</strong>는 큰 이점이 없습니다.</li>
+    </ul>
+  </li>
+  <li><code class="language-plaintext highlighter-rouge">INSERT … SELECT</code>는 <strong>엔진 내부에서 바로 읽고 바로 씁니다</strong>(파일 왕복 없음 ⇒ ?)
+    <ul>
+      <li>INSERT…SELECT는 <strong>단일 SQL</strong>로 실행 경로가 짧고, 파이프라이닝/버퍼링이 효율적</li>
+    </ul>
+  </li>
+  <li>대용량일수록 “부모→라우팅”보단 <strong>자식 파티션에 직접 적재</strong>가 유리합니다.
+    <ul>
+      <li>파티션을 이미 월별 5개로 생성 → 라우팅 오버헤드 미미</li>
+    </ul>
+  </li>
+  <li>PostgreSQL 내부 처리)의 실제 장점:
+    <ul>
+      <li>네트워크 I/O 제로: 모든 처리가 DB 내부</li>
+      <li>최적화된 메모리 관리: PostgreSQL의 shared_buffers 활용</li>
+      <li>트랜잭션 오버헤드 최소: 대용량 단일 트랜잭션 가능</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="343-절차">3.4.3 절차</h3>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">INSERT</span> <span class="k">INTO</span> <span class="n">acid</span><span class="p">.</span><span class="n">lrs_statement_new</span><span class="p">(</span><span class="nv">"timestamp"</span><span class="p">,</span> <span class="n">full_statement</span><span class="p">,</span> <span class="n">actor_id</span><span class="p">)</span>
+<span class="k">SELECT</span>
+  <span class="p">(</span><span class="nb">DATE</span> <span class="s1">'2025-03-01'</span> <span class="o">+</span> <span class="p">(</span><span class="n">floor</span><span class="p">(</span><span class="n">random</span><span class="p">()</span><span class="o">*</span><span class="mi">153</span><span class="p">))::</span><span class="nb">int</span><span class="p">)::</span><span class="n">timestamptz</span><span class="p">,</span>
+  <span class="n">s</span><span class="p">.</span><span class="n">full_statement</span><span class="p">,</span>
+  <span class="n">s</span><span class="p">.</span><span class="n">actor_id</span>
+<span class="k">FROM</span> <span class="n">acid</span><span class="p">.</span><span class="n">lrs_statement</span> <span class="k">AS</span> <span class="n">s</span>
+<span class="n">TABLESAMPLE</span> <span class="k">SYSTEM</span> <span class="p">(</span><span class="mi">3</span><span class="p">.</span><span class="mi">7</span><span class="p">)</span> <span class="k">REPEATABLE</span> <span class="p">(</span><span class="mi">1004</span><span class="p">)</span> <span class="c1">-- 균일 분포를 위한 랜덤 샘플링</span>
+<span class="k">LIMIT</span> <span class="mi">1000000</span><span class="p">;</span>
+</code></pre></div></div>
+
+<h3 id="344-결과">3.4.4 결과</h3>
+
+<ul>
+  <li><strong>생성+적재+AUTO VACUUM+WAL+트랜잭션 커밋</strong> 소요 시간 = 최소 20분 ~ 최대 1시간 (250만 건 기준)</li>
+  <li>
+    <table>
+      <tbody>
+        <tr>
+          <td>**총 7,975만 건</td>
+          <td>152GB**</td>
+        </tr>
+      </tbody>
+    </table>
+  </li>
+</ul>
+
+<p><img src="http://localhost:4000/magazine/assets/images/21.png" alt="21.png" /></p>
+
+<h1 id="4-데이터-파이프라인-구축-airflow">4. 데이터 파이프라인 구축 (Airflow)</h1>
+
+<h2 id="41-dag-구조-설계">4.1 DAG 구조 설계</h2>
+
+<h3 id="411-extract--transform--load-단계별-구성">4.1.1 Extract → Transform → Load 단계별 구성</h3>
+
+<ul>
+  <li><strong>Extract</strong>: <code class="language-plaintext highlighter-rouge">SELECT_SQL</code>로 원천 테이블에서 키셋 페이지네이션(정렬 키: <code class="language-plaintext highlighter-rouge">timestamp, actor_id</code>)을 사용해 고정 크기(<code class="language-plaintext highlighter-rouge">BATCH_SIZE</code>)로 끊어 읽음.
+    <ul>
+      <li><strong>의도</strong>: 오프셋 기반보다 인덱스-친화적이고 대용량에서도 성능이 선형적. 운영 인덱스 <code class="language-plaintext highlighter-rouge">(timestamp, actor_id)</code>만 타도록 WHERE/ORDER BY를 설계.</li>
+    </ul>
+  </li>
+  <li><strong>Transform(경량)</strong>: SELECT 단계에서 필요한 필드만 JSON 연산자로 즉시 추출(<code class="language-plaintext highlighter-rouge">full_statement-&gt;...</code>). 애플리케이션 단 변환은 최소화해 I/O를 우선 병목으로 보고 처리량 확보.</li>
+  <li><strong>Load</strong>: <code class="language-plaintext highlighter-rouge">io.StringIO</code> 버퍼에 누적 후 <code class="language-plaintext highlighter-rouge">COPY ... FROM STDIN</code>을 <strong>청크 단위(<code class="language-plaintext highlighter-rouge">COPY_CHUNK</code>)</strong>로 흘려보내는 <strong>스트리밍 로드</strong>.
+    <ul>
+      <li><strong>의도</strong>: row-by-row <code class="language-plaintext highlighter-rouge">INSERT</code>보다 수십 배 빠른 경향. 메모리 압박을 막기 위해 중간 flush(청크) 설계</li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="42-dag-구현">4.2 DAG 구현</h2>
+
+<h3 id="421-pythonoperator-postgreshook-활용"><strong>4.2.1 PythonOperator, PostgresHook 활용</strong></h3>
+
+<ul>
+  <li><strong>PythonOperator</strong>로 전체 월 범위를 순회(<code class="language-plaintext highlighter-rouge">run_all_months</code>) → 10일 단위로 세분(<code class="language-plaintext highlighter-rouge">split_range</code>) → 각 윈도우마다 <code class="language-plaintext highlighter-rouge">run_one_month</code> 실행.
+    <ul>
+      <li><strong>의도</strong>: 로직을 파이썬에서 제어하면 <strong>키셋 페이지네이션</strong>, <strong>청크 COPY</strong>, <strong>워터마크</strong>(마지막 <code class="language-plaintext highlighter-rouge">(timestamp, actor_id)</code>) 같은 세밀 제어가 쉬움.</li>
+    </ul>
+  </li>
+  <li><strong>PostgresHook</strong> 두 개를 써서 <strong>원천/타깃 커넥션 분리</strong>. 커넥션 당 커서 수명도 짧게 잡아 리소스 점유 최소화.</li>
+  <li><strong>빠른 사전 검증</strong>: <code class="language-plaintext highlighter-rouge">EXPLAIN (FORMAT JSON)</code>으로 월 윈도우의 예상 rows를 <strong>로그만 남김</strong>(실 COUNT로 테이블 풀스캔을 피함).</li>
+</ul>
+
+<h3 id="422-task-설계-및-실행-주기"><strong>4.2.2 task 설계 및 실행 주기</strong></h3>
+
+<ul>
+  <li>현 버전은 <strong>단일 태스크</strong>(<code class="language-plaintext highlighter-rouge">run_etl</code>)로 설계.
+    <ul>
+      <li><strong>의도</strong>: 초기 대용량 이관/적재에서는 <strong>최대 처리량 확보</strong>와 <strong>코드 단순성</strong>을 우선. COPY 스트리밍은 태스크 내부 루프가 유리.</li>
+    </ul>
+  </li>
+  <li><strong>스케줄</strong>: 현재 <code class="language-plaintext highlighter-rouge">schedule=None, max_active_runs=1</code>
+    <ul>
+      <li><strong>의도</strong>: 수동 기동/리런 시 중복 실행 방지. 대량 이관 종료 후에는 일 배치(예: <code class="language-plaintext highlighter-rouge">@daily</code>)로 전환 가능.</li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="43-에러-대응-및-최적화">4.3 에러 대응 및 최적화</h2>
+
+<h3 id="431-xcom-에러-트러블슈팅"><strong>4.3.1 XCom 에러 트러블슈팅</strong></h3>
+
+<p>Airflow 2.x는 <strong>PythonOperator의 리턴값을 XCom으로 자동 푸시</strong>. 대용량 오브젝트(리스트/데이터프레임/문자열 버퍼)를 반환하면 XCom 사이즈 한도를 넘어 <strong>직렬화/DB 에러</strong>가 발생할 수 있음.</p>
+
+<p><strong>1) 문제</strong>: 특정 태스크(<code class="language-plaintext highlighter-rouge">extract_actor_id_list_task</code>) 실행 시 <strong><code class="language-plaintext highlighter-rouge">UnmappableXComLengthPushed</code></strong> 예외 발생</p>
+
+<ul>
+  <li>
+    <p>에러 로그:</p>
+
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  airflow.exceptions.UnmappableXComLengthPushed: unmappable return value length: 2031 &gt; 1024
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>결과적으로 동적 매핑(<code class="language-plaintext highlighter-rouge">.expand()</code>)에 필요한 XCom 값이 비정상으로 처리되어 다운스트림 태스크 전부가 SKIPPED 처리됨.</p>
+  </li>
+</ul>
+
+<p><strong>2) 원인</strong></p>
+
+<ul>
+  <li><strong>XCom 자동 사용</strong>
+    <ul>
+      <li>Airflow의 <code class="language-plaintext highlighter-rouge">@task</code> 또는 <code class="language-plaintext highlighter-rouge">PythonOperator</code> 반환값은 자동으로 XCom에 저장된다.</li>
+      <li>코드에서 <code class="language-plaintext highlighter-rouge">xcom_push</code>, <code class="language-plaintext highlighter-rouge">xcom_pull</code>을 직접 호출하지 않아도 내부적으로 XCom이 항상 사용된다.</li>
+    </ul>
+  </li>
+  <li><strong>동적 태스크 매핑(expand)</strong>
+    <ul>
+      <li>매핑 대상 값은 반드시 XCom을 통해 전달된다.</li>
+      <li>이 값의 길이가 Airflow 코어 설정값 <code class="language-plaintext highlighter-rouge">max_map_length</code>(기본 1024)를 초과하면 매핑 불가능 에러가 발생한다.</li>
+    </ul>
+  </li>
+  <li><strong>실제 상황</strong>
+    <ul>
+      <li><code class="language-plaintext highlighter-rouge">actor_id</code> 리스트가 2,031개 반환됨 → 제한(1024) 초과</li>
+      <li>따라서 스케줄러가 매핑 태스크를 생성하지 못하고 에러 발생</li>
+    </ul>
+  </li>
+</ul>
+
+<p><strong>3) 해결 방법</strong></p>
+
+<p>단편적인 해결 방법이라고 생각하는 <code class="language-plaintext highlighter-rouge">AIRFLOW__CORE__MAX_MAP_LENGTH</code> 환경 변수 조정은 차순위 방법</p>
+
+<ul>
+  <li>근본적인 해결 방법이 아니기에 나중에 다른 문제가 생길 수 있다고 생각
+    <ul>
+      <li>태스크 인스턴스 수가 급격히 늘어날 경우 스케줄러/워커 부하가 커짐</li>
+    </ul>
+
+    <div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="na">environment</span><span class="pi">:</span>
+    <span class="na">AIRFLOW__CORE__MAX_MAP_LENGTH</span><span class="pi">:</span> <span class="s2">"</span><span class="s">5000"</span>
+</code></pre></div>    </div>
+  </li>
+</ul>
+
+<p>⇒ 따라서 코드 구조를 개선.</p>
+
+<p><strong>1) 청크 단위 반환</strong></p>
+
+<ul>
+  <li>리스트를 잘게 나눠 반환 → 매핑 개수 축소</li>
+</ul>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">CHUNK_SIZE</span> <span class="o">=</span> <span class="mi">200</span>
+<span class="n">chunks</span> <span class="o">=</span> <span class="p">[</span><span class="n">actor_ids</span><span class="p">[</span><span class="n">i</span><span class="p">:</span><span class="n">i</span><span class="o">+</span><span class="n">CHUNK_SIZE</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nf">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nf">len</span><span class="p">(</span><span class="n">actor_ids</span><span class="p">),</span> <span class="n">CHUNK_SIZE</span><span class="p">)]</span>
+<span class="k">return</span> <span class="n">chunks</span>
+</code></pre></div></div>
+
+<ul>
+  <li>다운스트림은 청크 단위 태스크 실행</li>
+</ul>
+
+<p><strong>2) 외부 저장소 활용</strong></p>
+
+<ul>
+  <li>대량 데이터는 DB/파일에 저장</li>
+  <li>XCom에는 페이지 번호, 범위 등 소량 메타데이터만 전달</li>
+</ul>
+
+<p><strong>3) 매핑 단위 상향</strong></p>
+
+<ul>
+  <li>개별 actor 단위 대신 actor 그룹/청크 단위 태스크로 재설계</li>
+</ul>
+
+<h3 id="432-장애-발생-대응-전략"><strong>4.3.2 장애 발생 대응 전략</strong></h3>
+
+<ul>
+  <li><strong>워터마크 재시도</strong>: 키셋 페이지네이션의 마지막 포인터 <code class="language-plaintext highlighter-rouge">(last_ts, last_actor_id)</code>를 로그로 남겨 <strong>재기동 시 이어 받기</strong> 가능
+    <ul>
+      <li>권장: 마지막 포인터를 <strong>타깃 테이블 또는 별도 체크포인트 테이블</strong>에 저장해 재시작 시 자동 복구</li>
+    </ul>
+  </li>
+  <li><strong>트랜잭션 경계</strong>: COPY 청크 flush마다 <code class="language-plaintext highlighter-rouge">commit</code>(현재는 윈도우 내 1커밋)
+    <ul>
+      <li>대량 적재에서 장애 발생 시 <strong>부분 재처리</strong> 범위를 줄이려면 <strong>청크별 커밋</strong>으로 조정 가능(대신 커밋 오버헤드 증가)</li>
+    </ul>
+  </li>
+  <li><strong>타입/스키마 미스매치</strong>(실무에서 자주 나는 오류)
+    <ul>
+      <li>예: <code class="language-plaintext highlighter-rouge">invalid input syntax for type uuid</code> 류 → <strong>타깃 컬럼 타입</strong>과 COPY 텍스트 직렬화 포맷 불일치</li>
+      <li>대응: 버퍼에 쓰기 전 <strong>모든 필드를 문자열로 안전 변환</strong>(탭/뉴라인 이스케이프, <code class="language-plaintext highlighter-rouge">None → \N</code>), <strong>타깃 컬럼 순서</strong>와 <strong>형 변환</strong> 명시. <code class="language-plaintext highlighter-rouge">to_char(timestamp, ...)</code> 같은 서버 사이드 캐스팅을 SELECT에 포함하면 더 안전</li>
+    </ul>
+  </li>
+  <li><strong>타임존 일관성</strong>
+    <ul>
+      <li>모든 커넥션 시작 시 <code class="language-plaintext highlighter-rouge">SET TIME ZONE 'UTC'</code>로 고정. SELECT 조건/워터마크/정렬이 <strong>절대 시각</strong> 기준으로 일치</li>
+    </ul>
+  </li>
+  <li><strong>운영 안전장치</strong>
+    <ul>
+      <li>Airflow <code class="language-plaintext highlighter-rouge">retries=1</code>, <code class="language-plaintext highlighter-rouge">retry_delay=3m</code>로 <strong>단기 네트워크 흔들림</strong> 흡수</li>
+      <li>원천/타깃 각각 <strong>connect_timeout</strong>, <strong>statement_timeout</strong>를 Hook 연결 문자열에 부여하는 것도 권장</li>
+    </ul>
+  </li>
+</ul>
+
+<h1 id="5-test-대용량-데이터-대상-dag-실행">5. Test: 대용량 데이터 대상 DAG 실행</h1>
+
+<h3 id="51-테스트-목적-및-시나리오">5.1 테스트 목적 및 시나리오</h3>
+
+<ul>
+  <li>DAG를 통해 대용량 데이터(1억 건) 적재 시 안정적으로 동작하는지 확인</li>
+  <li>Source DB → Stage DB로 Extract-Transform-Load 전 과정 부하 테스트(?)</li>
+  <li><em>(운영 환경과 유사한) 주기/동시성 조건에서의 성능 검증</em></li>
+</ul>
+
+<h3 id="52-dag-실행-조건">5.2 DAG 실행 조건</h3>
+
+<ul>
+  <li>실행 주기: 없음</li>
+  <li>병렬 처리: CeleryExecutor 기반 worker 분산 실행</li>
+  <li>주요 태스크:
+    <ul>
+      <li>Extract (원천 DB에서 페이징/청크 단위 추출)</li>
+      <li>Transform (JSON 파싱 및 actor_id 매핑)</li>
+      <li>Load (Stage DB에 COPY 방식으로 적재)</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="54-모니터링-및-검증-방법">5.4 모니터링 및 검증 방법</h3>
+
+<ul>
+  <li>로그 → 배치 처리 및 적재 소요 시간, 처리 row 수, 에러 확인</li>
+  <li>DB 모니터링 → <code class="language-plaintext highlighter-rouge">pg_stat_activity</code>, 디스크 I/O, 락 충돌 여부</li>
+  <li><em>성능 지표 → 처리 속도 (row/s), 총 소요 시간</em></li>
+</ul>
+
+<h3 id="55-결과-및-분석">5.5 결과 및 분석</h3>
+
+<ul>
+  <li>총 실행 시간 (예: 1억 건 적재에 N 시간 소요)
+    <ul>
+      <li>한 배치 당 실행 시간: 8~10분 → 20분+ → 40분 → …</li>
+      <li>CPU 점유율: 왔다갔다 했다가, 후반부에 보니까 airflow triggerer 의 점유율이 꾸준히 1등</li>
+    </ul>
+  </li>
+  <li>태스크별 병목 구간 확인 (Extract, Load, …)</li>
+  <li>튜닝 포인트: 배치 단위 크기, COPY vs INSERT, 파티셔닝 여부의 성능 차이, 인덱스의 효과</li>
+</ul>
+
+<p><img src="http://localhost:4000/magazine/assets/images/22.png" alt="22.png" /></p>
+
+<p><img src="http://localhost:4000/magazine/assets/images/23.png" alt="23.png" /></p>
+
+<h3 id="56-개선-방안-및-한계">5.6 개선 방안 및 한계</h3>
+
+<ul>
+  <li>개선 방안
+    <ul>
+      <li>현재 개선이 아닌 문제 해결이 필요한 상황</li>
+    </ul>
+  </li>
+  <li>한계
+    <ul>
+      <li>로컬 테스트 환경과 운영 환경의 DB 사양 차이</li>
+      <li>데이터 무결성 무시, 키 미설정
+  ex) id/statement_id 미할당, (timestamp, actor_id)의 고유성 상실
+        <ul>
+          <li>timestamp의 날짜 뿐 아니라 시간까지 랜덤 생성해야 했음</li>
+        </ul>
+
+        <p>⇒ 데이터 중복 검사 및 UPSERT 처리 x</p>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<h1 id="6-회고">6. 회고</h1>
+
+<h2 id="61-잘한-점">6.1 잘한 점</h2>
+
+<h2 id="62-아쉬운-점">6.2 아쉬운 점</h2>
+
+<ul>
+  <li>과제가 막연히 쉬울 거라 생각하여 작업 시간 분배에 실패했다.
+    <ul>
+      <li>대용량 샘플 데이터 생성과 DAG 실행에 대해 좀더 여러 번의 trial-error가 필요했다.</li>
+    </ul>
+  </li>
+  <li>DB 중고급 지식&amp;경험 부재
+    <ul>
+      <li>이를테면 적재량이 늘어날수록 Auto Vacuum, WAL이 잡아먹는 시간이 늘어나며 적재 속도가 느려진다는 것을 처음 알게 됨</li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="63-다음-할-일">6.3 다음 할 일</h2>
+
+<ul>
+  <li>모니터링 구축 후 병목 원인/지점 발굴, 제대로 된 테스트 및 기록</li>
+</ul>]]></content><author><name>jane</name></author><category term="airflow" /><category term="bigdata" /><category term="ETL" /><category term="PostgreSQL" /><category term="Problem Solving" /><category term="featured" /><summary type="html"><![CDATA[1. 프로젝트 개요]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="http://localhost:4000/magazine/assets/images/6.jpg" /><media:content medium="image" url="http://localhost:4000/magazine/assets/images/6.jpg" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">VSCode Remote SSH 접속 실패 문제 해결</title><link href="http://localhost:4000/magazine/remote-ssh-problem/" rel="alternate" type="text/html" title="VSCode Remote SSH 접속 실패 문제 해결" /><published>2025-09-04T00:00:00+09:00</published><updated>2025-09-04T00:00:00+09:00</updated><id>http://localhost:4000/magazine/remote-ssh-problem</id><content type="html" xml:base="http://localhost:4000/magazine/remote-ssh-problem/"><![CDATA[<h3 id="문제-상황-어떤-오류이슈였는지">문제 상황 (어떤 오류/이슈였는지)</h3>
 <p>회사에서 사용하는 AWS EC2 .pem 키를 받아 ~/.ssh/config에 필요한 설정을 해주었음에도 불구하고 계속 키 권한 문제 에러로 인한 Connection fail 발생.</p>
 
-<h2 id="원인-분석">원인 분석</h2>
+<h3 id="원인-분석">원인 분석</h3>
 <p><code class="language-plaintext highlighter-rouge">chmod 600 (파일명)</code>을 해줬고, 네트워크 설정상의 접근 권한 문제(인바운드/아웃바운드 등)가 없는데도 같은 문제가 발생한다는 건 다른 게 원인이라는 것. 그래서 접속 실패하기까지의 로그 전체를 분석</p>
 
-<h2 id="해결">해결</h2>
+<h3 id="해결">해결</h3>
 <p>IdentityFile에 적힌 pem키 파일 경로명을 상대 경로가 아닌 절대 경로로 정확하게 명시했더니 해결됐다.</p>
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Host airflow-ec2
   HostName (IP주소)
@@ -12,124 +595,30 @@
   IdentityFile (pem키 파일 경로)
 </code></pre></div></div>
 
-<h2 id="주의할-점--대체-방법">주의할 점 / 대체 방법</h2>
+<h3 id="주의할-점--대체-방법">주의할 점 / 대체 방법</h3>
 <ul>
   <li>파일/폴더 경로가 문제되는 다른 경우들에도 저런 식의 방법이 통할 때가 있었다.</li>
 </ul>
 
-<h2 id="참고-자료-링크-문서-등">참고 자료 (링크, 문서 등)</h2>
-<p>ChatGPT5.0</p>]]></content><author><name>jane</name></author><category term="ssh" /><category term="docker" /><summary type="html"><![CDATA[문제 상황 (어떤 오류/이슈였는지) 회사에서 사용하는 AWS EC2 .pem 키를 받아 ~/.ssh/config에 필요한 설정을 해주었음에도 불구하고 계속 키 권한 문제 에러로 인한 Connection fail 발생.]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="http://localhost:4000/magazine/assets/images/2.jpg" /><media:content medium="image" url="http://localhost:4000/magazine/assets/images/2.jpg" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">airflow UID가 생성?되지 않는 문제</title><link href="http://localhost:4000/magazine/docker-airflow-uid-problem/" rel="alternate" type="text/html" title="airflow UID가 생성?되지 않는 문제" /><published>2025-09-03T00:00:00+09:00</published><updated>2025-09-03T00:00:00+09:00</updated><id>http://localhost:4000/magazine/docker-airflow-uid-problem</id><content type="html" xml:base="http://localhost:4000/magazine/docker-airflow-uid-problem/"><![CDATA[<h2 id="문제-상황-어떤-오류이슈였는지">문제 상황 (어떤 오류/이슈였는지)</h2>
+<h3 id="참고-자료-링크-문서-등">참고 자료 (링크, 문서 등)</h3>
+<p>ChatGPT5.0</p>]]></content><author><name>jane</name></author><category term="ssh" /><category term="docker" /><summary type="html"><![CDATA[문제 상황 (어떤 오류/이슈였는지) 회사에서 사용하는 AWS EC2 .pem 키를 받아 ~/.ssh/config에 필요한 설정을 해주었음에도 불구하고 계속 키 권한 문제 에러로 인한 Connection fail 발생.]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="http://localhost:4000/magazine/assets/images/2.jpg" /><media:content medium="image" url="http://localhost:4000/magazine/assets/images/2.jpg" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">airflow UID가 생성?되지 않는 문제</title><link href="http://localhost:4000/magazine/docker-airflow-uid-problem/" rel="alternate" type="text/html" title="airflow UID가 생성?되지 않는 문제" /><published>2025-09-03T00:00:00+09:00</published><updated>2025-09-03T00:00:00+09:00</updated><id>http://localhost:4000/magazine/docker-airflow-uid-problem</id><content type="html" xml:base="http://localhost:4000/magazine/docker-airflow-uid-problem/"><![CDATA[<h3 id="문제-상황-어떤-오류이슈였는지">문제 상황 (어떤 오류/이슈였는지)</h3>
 <p>docker compose 파일에 <code class="language-plaintext highlighter-rouge">user: "${AIRFLOW_UID:-50000}:0"</code> 라는 부분이 포함돼있음. 그럼에도 불구하고 AIRFLOW_UID가 생성되지 않아 <code class="language-plaintext highlighter-rouge">WARNING</code>이 뜨고, 실제 airflow-init 컨테이너를 비롯하여 여러 컨테이너를 띄울 때 에러를 보이며 airflow 구동에 실패함.</p>
 
-<h2 id="원인-분석">원인 분석</h2>
+<h3 id="원인-분석">원인 분석</h3>
 
-<h2 id="해결-방법-코드명령어-포함">해결 방법 (코드/명령어 포함)</h2>
+<h3 id="해결-방법-코드명령어-포함">해결 방법 (코드/명령어 포함)</h3>
 <p>프로젝트 루트(Compose 파일이 있는 폴더)에 .env 파일을 만들어 항상 로드되게 한다.</p>
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>echo "AIRFLOW_UID=$(id -u)" &gt; .env
 </code></pre></div></div>
 
-<h2 id="주의할-점--대체-방법">주의할 점 / 대체 방법</h2>
+<h3 id="주의할-점--대체-방법">주의할 점 / 대체 방법</h3>
 <ul>
   <li>신기한 건, 실행 환경에 따라 AIRFLOW_UID가 항상 달랐다는 것.</li>
   <li>.env는 자동으로 읽히므로, 쉘에서 export 안 해도 됨</li>
 </ul>
 
-<h2 id="참고-자료-링크-문서-등">참고 자료 (링크, 문서 등)</h2>
-<p>ChatGPT5.0</p>]]></content><author><name>jane</name></author><category term="airflow" /><category term="docker" /><summary type="html"><![CDATA[문제 상황 (어떤 오류/이슈였는지) docker compose 파일에 user: "${AIRFLOW_UID:-50000}:0" 라는 부분이 포함돼있음. 그럼에도 불구하고 AIRFLOW_UID가 생성되지 않아 WARNING이 뜨고, 실제 airflow-init 컨테이너를 비롯하여 여러 컨테이너를 띄울 때 에러를 보이며 airflow 구동에 실패함.]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="http://localhost:4000/magazine/assets/images/1.jpg" /><media:content medium="image" url="http://localhost:4000/magazine/assets/images/1.jpg" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">젠레스 존 제로: 캐릭터 간 교대를 중심으로 한 전투 흐름은 어떤 플레이어 경험을 유도하는가?</title><link href="http://localhost:4000/magazine/zzz-change-system/" rel="alternate" type="text/html" title="젠레스 존 제로: 캐릭터 간 교대를 중심으로 한 전투 흐름은 어떤 플레이어 경험을 유도하는가?" /><published>2025-07-19T00:00:00+09:00</published><updated>2025-07-19T00:00:00+09:00</updated><id>http://localhost:4000/magazine/zzz-change-system</id><content type="html" xml:base="http://localhost:4000/magazine/zzz-change-system/"><![CDATA[<h1 id="-전투에서-캐릭터-교대-시스템이-만들어내는-플레이어-경험과-대중성"><젠레스 존="" 제로=""> 전투에서 캐릭터 교대 시스템이 만들어내는 플레이어 경험과 대중성</젠레스></h1>
-
-<h2 id="1-주제-선정-이유">1. 주제 선정 이유</h2>
-
-<p>Zenless Zone Zero(이하 ZZZ)는 캐릭터 4인을 팀으로 운용하며, 이들 간의 교대 타이밍이 곧 전투 리듬, 스피드, 핵심 재미 및 매커니즘을 담당하는 요소다. 이는 같은 장르(ARPG)의 다른 게임들과 비교하여 젠존제만의 독특한 개성을 만들어 낸다. 그러므로 이 시스템이 유도하는 플레이어 경험을 분석하여 젠존제가 어떻게 높은 인기를 구가할 수 있었는지 살펴본다. =&gt; 인기 말고 대중성이라고 바꾸고, 내가 여기서 말한 대중성이 무슨 의미이며 어떤 의미인지 말하고, 결론을 쓴다.
-<br /><br /></p>
-
-<h2 id="2-핵심-시스템구조-설명">2. 핵심 시스템/구조 설명</h2>
-
-<h3 id="21-지원교대-개요">2.1 지원(교대) 개요</h3>
-<ul>
-  <li><strong>지원</strong>은 전투 중 아군 캐릭터를 즉시 교체하는 기술이며, ZZZ 전투의 핵심 메커니즘이다.</li>
-  <li>지원에는 크게 <strong>빠른 지원</strong>과 <strong>극한 지원</strong> 두 가지 형태가 있다.</li>
-</ul>
-
-<h3 id="22-빠른-지원">2.2 빠른 지원</h3>
-<ol>
-  <li><strong>발동 조건</strong>
-    <ul>
-      <li>출전 중인 캐릭터가 강력한 공격을 받아 <strong>넉백/강한 넉백/넉업</strong> 상태에 진입(피격 스턴)했을 때</li>
-      <li>피격 스턴이 발생한 직후 짧은 타이밍 안에 “ZZZ-아이콘-지원…” 탭 입력</li>
-    </ul>
-  </li>
-  <li><strong>효과</strong>
-    <ul>
-      <li>즉시 다음 캐릭터로 교체하여, 피격 스턴 중에도 빠르게 공세를 이어갈 수 있음</li>
-      <li>전투의 흐름을 끊기지 않게 유지하며, ZZZ 특유의 속도감과 리듬을 강조</li>
-    </ul>
-  </li>
-  <li><strong>확장 요소</strong>
-    <ul>
-      <li>일부 지원 에이전트 스킬로도 빠른 지원을 촉발할 수 있어, 피격 중이 아니어도 동일한 교대 효과 발동 가능</li>
-    </ul>
-  </li>
-</ol>
-
-<h3 id="23-극한-지원">2.3 극한 지원</h3>
-<ol>
-  <li><strong>발동 조건</strong>
-    <ul>
-      <li>적이 <strong>특정 강력 기술</strong>을 시전할 때 화면에 금빛 알림이 뜰 때</li>
-      <li>이 알림이 뜬 직후 “ZZZ-아이콘-지원…” 탭 입력</li>
-      <li>지원 포인트가 충분하고, 대기 중인 캐릭터가 해당 극한 지원 조건(패링 또는 회피)을 충족할 것</li>
-    </ul>
-  </li>
-  <li><strong>지원 포인트</strong>
-    <ul>
-      <li>발동 시 <strong>공격 강도</strong>와 <strong>캐릭터 성능</strong>에 비례한 포인트 소모</li>
-      <li>콤보 스킬 또는 궁극기 시전 시 <strong>1pt 회복</strong></li>
-    </ul>
-  </li>
-  <li><strong>발동 효과 및 유형</strong>
-    <ul>
-      <li>발동 직후 “ZZZ-아이콘-일반…” 탭 시 추가로 <strong>지원 돌격</strong> 실행 가능</li>
-      <li><strong>극한 지원</strong> 시 잠깐 화면이 흑백으로 변하며, 이때 돌격은 사용할 수 없음</li>
-      <li><strong>패링 지원</strong>
-        <ul>
-          <li>적 공격을 패링하여 대량의 그로기 수치 누적</li>
-          <li>공격 대부분의 경직 유발</li>
-        </ul>
-      </li>
-      <li><strong>회피 지원</strong>
-        <ul>
-          <li>적 공격을 회피하며 <strong>극한 시야</strong> 발동</li>
-          <li>해당 시야 내 적 행동 속도 대폭 감소</li>
-          <li>교대 캐릭터 무적 상태 유지</li>
-        </ul>
-      </li>
-    </ul>
-  </li>
-  <li><strong>제한 조건</strong>
-    <ul>
-      <li>지원 포인트 부족 혹은 대기 캐릭터가 조건 미충족 시 발동 불가(금빛 알림이 붉은 빛으로 변경)</li>
-      <li>붉은 빛 알림 시 탭 입력하면 다음 캐릭터로 교체되고, <strong>극한 회피</strong>만 발동</li>
-    </ul>
-  </li>
-</ol>
-
-<h3 id="24-우수한-패링-능력">2.4 우수한 패링 능력</h3>
-<ul>
-  <li>특정 캐릭터가 보유한 고유 능력으로, <strong>고강도 공격 패링 시 지원 포인트 소모량을 절반으로 감소</strong></li>
-  <li>일반적으로 2pt 소모되는 상황에서 1pt만 소모하여 보다 자주 극한 지원을 사용할 수 있음</li>
-</ul>
-
-<h2 id="3-유저-경험-효과">3. 유저 경험 효과</h2>
-<h3 id="1-타-게임-대비-좀더-다채로운-전투-행동-사이클-설계">1) 타 게임 대비 좀더 다채로운 전투 행동 사이클 설계</h3>
-<h3 id="2-스피디하고-화려한-전투">2) 스피디하고 화려한 전투</h3>
-<h3 id="3-독특한-패링-연출-및-스킬-패링-중심의-전투-유도">3) 독특한 패링 연출 및 스킬, 패링 중심의 전투 유도</h3>
-<h3 id="4-초반-기준-전투-난도-진입-장벽을-낮추는-요소">4) (초반 기준) 전투 난도, 진입 장벽을 낮추는 요소</h3>
-<ul>
-  <li>덕분에 액션 게임 초보라도 액션 장르를 즐기기 좋은 요소가 됨</li>
-  <li>패링·회피 조건을 잘 맞출수록 더 적은 포인트로 극한 지원 사용 가능 → 액션 게임 숙련도가 높은 유저에게 좋은 요소</li>
-</ul>
-
-<h2 id="4-결론">4. 결론</h2>]]></content><author><name>jane</name></author><category term="Action" /><category term="System Analysis" /><category term="featured" /><summary type="html"><![CDATA[전투에서 캐릭터 교대 시스템이 만들어내는 플레이어 경험과 대중성]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="http://localhost:4000/magazine/assets/images/6.jpg" /><media:content medium="image" url="http://localhost:4000/magazine/assets/images/6.jpg" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">Welcome to Jekyll!</title><link href="http://localhost:4000/magazine/welcome-to-jekyll/" rel="alternate" type="text/html" title="Welcome to Jekyll!" /><published>2019-02-04T00:00:00+09:00</published><updated>2019-02-04T00:00:00+09:00</updated><id>http://localhost:4000/magazine/welcome-to-jekyll</id><content type="html" xml:base="http://localhost:4000/magazine/welcome-to-jekyll/"><![CDATA[<p>You’ll find this post in your <code class="language-plaintext highlighter-rouge">_posts</code> directory. Go ahead and edit it and re-build the site to see your changes. You can rebuild the site in many different ways, but the most common way is to run <code class="language-plaintext highlighter-rouge">jekyll serve</code>, which launches a web server and auto-regenerates your site when a file is updated.</p>
+<h3 id="참고-자료-링크-문서-등">참고 자료 (링크, 문서 등)</h3>
+<p>ChatGPT5.0</p>]]></content><author><name>jane</name></author><category term="airflow" /><category term="docker" /><summary type="html"><![CDATA[문제 상황 (어떤 오류/이슈였는지) docker compose 파일에 user: "${AIRFLOW_UID:-50000}:0" 라는 부분이 포함돼있음. 그럼에도 불구하고 AIRFLOW_UID가 생성되지 않아 WARNING이 뜨고, 실제 airflow-init 컨테이너를 비롯하여 여러 컨테이너를 띄울 때 에러를 보이며 airflow 구동에 실패함.]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="http://localhost:4000/magazine/assets/images/1.jpg" /><media:content medium="image" url="http://localhost:4000/magazine/assets/images/1.jpg" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">Welcome to Jekyll!</title><link href="http://localhost:4000/magazine/welcome-to-jekyll/" rel="alternate" type="text/html" title="Welcome to Jekyll!" /><published>2019-02-04T00:00:00+09:00</published><updated>2019-02-04T00:00:00+09:00</updated><id>http://localhost:4000/magazine/welcome-to-jekyll</id><content type="html" xml:base="http://localhost:4000/magazine/welcome-to-jekyll/"><![CDATA[<p>You’ll find this post in your <code class="language-plaintext highlighter-rouge">_posts</code> directory. Go ahead and edit it and re-build the site to see your changes. You can rebuild the site in many different ways, but the most common way is to run <code class="language-plaintext highlighter-rouge">jekyll serve</code>, which launches a web server and auto-regenerates your site when a file is updated.</p>
 
 <p>To add new posts, simply add a file in the <code class="language-plaintext highlighter-rouge">_posts</code> directory that follows the convention <code class="language-plaintext highlighter-rouge">YYYY-MM-DD-name-of-post.ext</code> and includes the necessary front matter. Take a look at the source for this post to get an idea about how it works.</p>
 
