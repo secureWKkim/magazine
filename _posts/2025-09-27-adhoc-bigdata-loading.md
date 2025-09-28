@@ -196,7 +196,7 @@ IMPORT FOREIGN SCHEMA source_schema
 - 이후 동일 데이터를 timestamp만 변경하여 대용량 데이터셋 생성 가능.
 - 개발한 DAG task 모두 성공
     
-    ![20.jpg](http://localhost:4000/magazine/assets/images/20.jpg)
+    ![20.jpg]({{ site.baseurl }}/assets/images/20.jpg)
     
 
 ## 3.4 대용량 샘플 데이터(8천만 건) 생성 및 적재
@@ -244,7 +244,7 @@ LIMIT 1000000;
 - **생성+적재+AUTO VACUUM+WAL+트랜잭션 커밋** 소요 시간 = 최소 20분 ~ 최대 1시간 (250만 건 기준)
 - **총 7,975만 건 | 152GB**
 
-![21.png](http://localhost:4000/magazine/assets/images/21.png)
+![21.png]({{ site.baseurl }}/assets/images/21.png)
 
 # 4. 데이터 파이프라인 구축 (Airflow)
 
@@ -384,9 +384,9 @@ return chunks
 - 태스크별 병목 구간 확인 (Extract, Load, …)
 - 튜닝 포인트: 배치 단위 크기, COPY vs INSERT, 파티셔닝 여부의 성능 차이, 인덱스의 효과
 
-![22.png](http://localhost:4000/magazine/assets/images/22.png)
+![22.png]({{ site.baseurl }}/assets/images/22.png)
 
-![23.png](http://localhost:4000/magazine/assets/images/23.png)
+![23.png]({{ site.baseurl }}/assets/images/23.png)
 
 ### 5.6 개선 방안 및 한계
 

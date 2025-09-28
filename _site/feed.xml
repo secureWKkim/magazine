@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="http://localhost:4000/magazine/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/magazine/" rel="alternate" type="text/html" /><updated>2025-09-29T02:56:04+09:00</updated><id>http://localhost:4000/magazine/feed.xml</id><title type="html">Eyes can blaze like Meteors!🌠</title><subtitle>Mundana is a free Jekyll theme for awesome people like you, Medium like.</subtitle><entry><title type="html">수습 과제: A사 3월~7월 데이터 adhoc 구축</title><link href="http://localhost:4000/magazine/adhoc-bigdata-loading/" rel="alternate" type="text/html" title="수습 과제: A사 3월~7월 데이터 adhoc 구축" /><published>2025-09-27T00:00:00+09:00</published><updated>2025-09-27T00:00:00+09:00</updated><id>http://localhost:4000/magazine/adhoc-bigdata-loading</id><content type="html" xml:base="http://localhost:4000/magazine/adhoc-bigdata-loading/"><![CDATA[<h1 id="1-프로젝트-개요">1. 프로젝트 개요</h1>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="http://localhost:4000/magazine/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/magazine/" rel="alternate" type="text/html" /><updated>2025-09-29T03:08:09+09:00</updated><id>http://localhost:4000/magazine/feed.xml</id><title type="html">Eyes can blaze like Meteors!🌠</title><subtitle>Mundana is a free Jekyll theme for awesome people like you, Medium like.</subtitle><entry><title type="html">수습 과제: A사 3월~7월 데이터 adhoc 구축</title><link href="http://localhost:4000/magazine/adhoc-bigdata-loading/" rel="alternate" type="text/html" title="수습 과제: A사 3월~7월 데이터 adhoc 구축" /><published>2025-09-27T00:00:00+09:00</published><updated>2025-09-27T00:00:00+09:00</updated><id>http://localhost:4000/magazine/adhoc-bigdata-loading</id><content type="html" xml:base="http://localhost:4000/magazine/adhoc-bigdata-loading/"><![CDATA[<h1 id="1-프로젝트-개요">1. 프로젝트 개요</h1>
 
 <h2 id="11-프로젝트-목적">1.1 프로젝트 목적</h2>
 
@@ -234,7 +234,7 @@
   <li>
     <p>개발한 DAG task 모두 성공</p>
 
-    <p><img src="http://localhost:4000/magazine/assets/images/20.jpg" alt="20.jpg" /></p>
+    <p><img src="/magazine/assets/images/20.jpg" alt="20.jpg" /></p>
   </li>
 </ul>
 
@@ -314,7 +314,7 @@
   </li>
 </ul>
 
-<p><img src="http://localhost:4000/magazine/assets/images/21.png" alt="21.png" /></p>
+<p><img src="/magazine/assets/images/21.png" alt="21.png" /></p>
 
 <h1 id="4-데이터-파이프라인-구축-airflow">4. 데이터 파이프라인 구축 (Airflow)</h1>
 
@@ -531,9 +531,9 @@
   <li>튜닝 포인트: 배치 단위 크기, COPY vs INSERT, 파티셔닝 여부의 성능 차이, 인덱스의 효과</li>
 </ul>
 
-<p><img src="http://localhost:4000/magazine/assets/images/22.png" alt="22.png" /></p>
+<p><img src="/magazine/assets/images/22.png" alt="22.png" /></p>
 
-<p><img src="http://localhost:4000/magazine/assets/images/23.png" alt="23.png" /></p>
+<p><img src="/magazine/assets/images/23.png" alt="23.png" /></p>
 
 <h3 id="56-개선-방안-및-한계">5.6 개선 방안 및 한계</h3>
 
