@@ -1,10 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 <url>
-<loc>http://localhost:4000/magazine/quick-start-guide/</loc>
-<lastmod>2019-01-20T00:00:00+09:00</lastmod>
-</url>
-<url>
 <loc>http://localhost:4000/magazine/is-intelligence-enough/</loc>
 <lastmod>2019-01-21T00:00:00+09:00</lastmod>
 </url>
@@ -71,6 +67,10 @@
 <url>
 <loc>http://localhost:4000/magazine/adhoc-bigdata-loading/</loc>
 <lastmod>2025-09-27T00:00:00+09:00</lastmod>
+</url>
+<url>
+<loc>http://localhost:4000/magazine/big-data-sampling/</loc>
+<lastmod>2025-10-09T00:00:00+09:00</lastmod>
 </url>
 <url>
 <loc>http://localhost:4000/magazine/404/</loc>

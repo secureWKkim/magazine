@@ -2,7 +2,7 @@
 layout: post
 title:  "수습 과제: A사 3월~7월 데이터 adhoc 구축"
 author: jane
-categories: [airflow, bigdata, ETL, PostgreSQL, Problem Solving]
+categories: [airflow, bigdata, ETL, PostgreSQL]
 image: assets/images/6.jpg
 tags: featured
 ---

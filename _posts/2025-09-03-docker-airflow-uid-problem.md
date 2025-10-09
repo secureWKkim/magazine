@@ -4,6 +4,7 @@ title: "airflow UID가 생성?되지 않는 문제"
 author: jane
 categories: [ airflow, docker ]
 image: assets/images/1.jpg
+tags: featured
 ---
 
 ### 문제 상황 (어떤 오류/이슈였는지)

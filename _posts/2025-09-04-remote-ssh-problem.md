@@ -4,6 +4,7 @@ title: "VSCode Remote SSH 접속 실패 문제 해결"
 author: jane
 categories: [ ssh, docker ]
 image: assets/images/2.jpg
+tags: featured
 ---
 
 ### 문제 상황 (어떤 오류/이슈였는지)
